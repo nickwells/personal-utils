@@ -13,13 +13,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/col.mod/v2/col"
 	"github.com/nickwells/col.mod/v2/col/colfmt"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v3/param"
-	"github.com/nickwells/param.mod/v3/param/paramset"
-	"github.com/nickwells/param.mod/v3/param/psetter"
+	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/paramset"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -312,6 +313,8 @@ var style = showLeafEntries
 
 var minimalAmount float64
 
+var showCats = []string{catAll}
+
 func main() {
 	ps := paramset.NewOrDie(addParams,
 		SetConfigFile,
@@ -331,7 +334,12 @@ func main() {
 	}
 	summaries := getAccountData(files)
 
-	summaries.report(style)
+	sep := ""
+	for _, cat := range showCats {
+		fmt.Print(sep)
+		sep = "\n"
+		summaries.report(style, cat)
+	}
 }
 
 // getAccountData opens each file in turn and reads from it to populate the
@@ -431,20 +439,21 @@ func (s *Summaries) createNewMapEntries(fileName string, lineNum int, xa Xactn) 
 
 // normalise converts the string into a 'normal' form - this involves editing
 // it to replace multiple alternative spellings into a single variant. It
-// returns after the first edit which changes the string
+// returns after all the edits have been applied
 func (s *Summaries) normalise(str string) string {
 	for _, ed := range s.edits {
-		newS := ed.searchRE.ReplaceAllLiteralString(str, ed.replacement)
-		if newS != str {
-			return newS
-		}
+		str = ed.searchRE.ReplaceAllLiteralString(str, ed.replacement)
 	}
 	return str
 }
 
 //  report will report the summaries
-func (s *Summaries) report(style reportStyle) {
-	summ := s.summaries[catAll]
+func (s *Summaries) report(style reportStyle, cat string) {
+	summ, ok := s.summaries[cat]
+	if !ok {
+		fmt.Printf("*** category: %q is not recognised\n", cat)
+		return
+	}
 
 	h, err := col.NewHeader()
 	if err != nil {
@@ -542,6 +551,9 @@ func addParams(ps *param.PSet) error {
 			Expectation: filecheck.Provisos{Existence: filecheck.MustExist},
 		},
 		"the name of the file containing the bank account transactions."+
+			" This can also be given as a list of files after a "+
+			ps.TerminalParam()+" parameter."+
+			"\n"+
 			" The file is expected to contain lines of comma-separated"+
 			" values with the values as follows:\n\n"+
 			"transaction date in the form DD/MM/YYYY\n"+
@@ -612,6 +624,18 @@ func addParams(ps *param.PSet) error {
 			style = summaryReport
 			return nil
 		}))
+
+	ps.Add("show-categories",
+		psetter.StrList{
+			Value: &showCats,
+			Checks: []check.StringSlice{
+				check.StringSliceLenGT(0),
+			},
+		},
+		"show the report only for the listed categories",
+		param.AltName("show-cats"),
+		param.AltName("cats"),
+	)
 
 	ps.Add("minimal-amount", psetter.Float64{Value: &minimalAmount},
 		"don't show summaries where the total transactions are less than this")

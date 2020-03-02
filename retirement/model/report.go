@@ -62,7 +62,7 @@ func colVals(m M, lastPfl float64, r *AggResults) ([]interface{}, float64) {
 	minInc, avgInc, sdInc, maxInc, _ := r.income.vals()
 	minPfl, avgPfl, sdPfl, maxPfl, _ := r.portfolio.vals()
 	vals := []interface{}{
-		r.year,
+		r.year + 1,
 		minPfl,
 		float64(r.portfolioDown) / float64(m.trials),
 		avgPfl, sdPfl, maxPfl,
@@ -154,9 +154,10 @@ func (m M) reportModelParams() {
 		col.New(colfmt.Int{W: 6}, "Income", "years", "defered"),
 		col.New(colfmt.Int{W: 6}, "Crash", "interval"),
 		col.New(&colfmt.Percent{W: 6, Prec: 2}, "Crash", "%age"),
-		col.New(colfmt.Int{W: 6}, "Model", "years"),
-		col.New(colfmt.Int{W: 7}, "Model", "trials p/a"),
-		col.New(colfmt.Int{W: 6}, "Model", "yrs shown"),
+		col.New(colfmt.Int{W: 6}, "Model", "", "duration"),
+		col.New(colfmt.Int{W: 7}, "Model", "trials", "p/a"),
+		col.New(colfmt.Int{W: 6}, "Model", "years", "shown"),
+		col.New(colfmt.Int{W: 6}, "Model", "average", "set"),
 	)
 	if err != nil {
 		fmt.Println("Error found while constructing the report for params:",
@@ -171,7 +172,7 @@ func (m M) reportModelParams() {
 		m.rtnMeanPct/100, m.rtnSDPct/100, m.minGrowthPct/100,
 		m.targetIncome, m.minIncome, m.drawingPeriodsPerYear, m.yearsDefered,
 		m.crashInterval, m.crashPct/100,
-		m.years, m.trials, m.yearsToShow)
+		m.years, m.trials, m.yearsToShow, m.extremeSetSize)
 	if err != nil {
 		fmt.Println("Couldn't print the model parameters:", err)
 	}
