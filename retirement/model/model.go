@@ -200,8 +200,8 @@ type AggResults struct {
 	crash             int
 	bust              int
 	portfolioDown     int
-	portfolio         *stat
-	income            *stat
+	portfolio         *Stat
+	income            *Stat
 }
 
 // NewAggResults constructs a new AggResults value and returns a pointer to
@@ -210,7 +210,7 @@ func NewAggResults(size int) (*AggResults, error) {
 	if size < 1 {
 		return nil,
 			fmt.Errorf(
-				"the size to be used for the stat members must be >= 1 (is %d)",
+				"the size to be used for the Stat members must be >= 1 (is %d)",
 				size)
 	}
 	ar := &AggResults{

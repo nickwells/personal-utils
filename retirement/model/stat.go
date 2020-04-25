@@ -6,8 +6,8 @@ import (
 	"sort"
 )
 
-// stat records a statistic
-type stat struct {
+// Stat records a statistic
+type Stat struct {
 	count int
 	sum   float64
 	sumSq float64
@@ -17,14 +17,14 @@ type stat struct {
 
 // NewStat constructs a new stat value and returns a pointer to it. An error
 // is returned if the size is less than 1
-func NewStat(size int) (*stat, error) {
+func NewStat(size int) (*Stat, error) {
 	if size < 1 {
 		return nil,
 			fmt.Errorf(
 				"the capacity of the min and max slices must be >= 1 (is %d)",
 				size)
 	}
-	s := &stat{}
+	s := &Stat{}
 	s.mins = make([]float64, 0, size)
 	s.maxs = make([]float64, 0, size)
 	return s, nil
@@ -32,7 +32,7 @@ func NewStat(size int) (*stat, error) {
 
 // NewStatOrPanic constructs a new stat value and returns a pointer to t. It
 // will panic if there are any errors returned while creating it
-func NewStatOrPanic(size int) *stat {
+func NewStatOrPanic(size int) *Stat {
 	s, err := NewStat(size)
 	if err != nil {
 		panic(err)
@@ -48,7 +48,7 @@ const (
 )
 
 // addVal adds a new value to the stat
-func (s *stat) addVal(val float64) {
+func (s *Stat) addVal(val float64) {
 	maxIdx := cap(s.mins) - 1
 
 	s.count++
@@ -105,7 +105,7 @@ func merge(s1, s2 []float64) []float64 {
 }
 
 // mergeVal combines the stats
-func (s *stat) mergeVal(s2 *stat) {
+func (s *Stat) mergeVal(s2 *Stat) {
 	aggMins := merge(s.mins, s2.mins)
 	end := cap(s.mins)
 	if end > len(aggMins) {
@@ -136,7 +136,7 @@ func calcMean(s []float64) float64 {
 }
 
 // vals returns the calculated values from the stat
-func (s stat) vals() (min, avg, sd, max float64, count int) {
+func (s Stat) vals() (min, avg, sd, max float64, count int) {
 	if s.count == 0 {
 		return
 	}

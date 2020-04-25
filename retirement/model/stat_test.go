@@ -154,7 +154,7 @@ func TestMerge(t *testing.T) {
 	}
 }
 
-func statDiffers(s1, s2 stat) bool {
+func statDiffers(s1, s2 Stat) bool {
 	if s1.count != s2.count {
 		return true
 	}
@@ -178,13 +178,13 @@ func TestAddVal(t *testing.T) {
 		testhelper.ID
 		size    int
 		vals    []float64
-		expStat stat
+		expStat Stat
 	}{
 		{
 			ID:   testhelper.MkID("size 3, 4 vals"),
 			size: 3,
 			vals: []float64{10, 10, 10, 5},
-			expStat: stat{
+			expStat: Stat{
 				count: 4,
 				sum:   35,
 				sumSq: 325,
@@ -196,7 +196,7 @@ func TestAddVal(t *testing.T) {
 			ID:   testhelper.MkID("size 3, 2 vals"),
 			size: 3,
 			vals: []float64{10, 5},
-			expStat: stat{
+			expStat: Stat{
 				count: 2,
 				sum:   15,
 				sumSq: 125,
@@ -223,27 +223,27 @@ func TestMergeVal(t *testing.T) {
 
 	testCases := []struct {
 		testhelper.ID
-		s1     stat
-		s2     stat
-		expVal stat
+		s1     Stat
+		s2     Stat
+		expVal Stat
 	}{
 		{
 			ID: testhelper.MkID("..."),
-			s1: stat{
+			s1: Stat{
 				count: 2,
 				sum:   15,
 				sumSq: 125,
 				mins:  []float64{5, 10},
 				maxs:  []float64{5, 10},
 			},
-			s2: stat{
+			s2: Stat{
 				count: 2,
 				sum:   15,
 				sumSq: 125,
 				mins:  []float64{5, 10},
 				maxs:  []float64{5, 10},
 			},
-			expVal: stat{
+			expVal: Stat{
 				count: 4,
 				sum:   30,
 				sumSq: 250,
@@ -255,14 +255,14 @@ func TestMergeVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("empty stat1 with excess capacity"),
 			s1: stat1,
-			s2: stat{
+			s2: Stat{
 				count: 2,
 				sum:   15,
 				sumSq: 125,
 				mins:  []float64{5, 10},
 				maxs:  []float64{5, 10},
 			},
-			expVal: stat{
+			expVal: Stat{
 				count: 2,
 				sum:   15,
 				sumSq: 125,
