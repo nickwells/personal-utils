@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 
 	"github.com/nickwells/filecheck.mod/filecheck"
-	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/xdg.mod/xdg"
 )
 
@@ -34,4 +34,3 @@ func SetConfigFile(ps *param.PSet) error {
 		filecheck.Optional)
 	return nil
 }
-

@@ -18,9 +18,9 @@ import (
 	"github.com/nickwells/col.mod/v2/col/colfmt"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v4/param"
-	"github.com/nickwells/param.mod/v4/param/paramset"
-	"github.com/nickwells/param.mod/v4/param/psetter"
+	"github.com/nickwells/param.mod/v5/param"
+	"github.com/nickwells/param.mod/v5/param/paramset"
+	"github.com/nickwells/param.mod/v5/param/psetter"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
