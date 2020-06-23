@@ -11,7 +11,7 @@ import (
 func main() {
 	m := model.New()
 	ps := paramset.NewOrDie(
-		m.MakeAddParamsFunc(),
+		model.AddParams(m),
 		SetConfigFile,
 		param.SetProgramDescription(
 			"this will simulate various scenarios for retirement"+

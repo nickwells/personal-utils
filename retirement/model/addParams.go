@@ -8,9 +8,9 @@ import (
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
-// (m *M)MakeAddParamsFunc creates and returns a function that will set the
-// parameters on a param set which will update entries in the model
-func (m *M) MakeAddParamsFunc() param.PSetOptFunc {
+// AddParams creates and returns a function that will set the parameters on a
+// param set which will update entries in the model
+func AddParams(m *M) param.PSetOptFunc {
 	return func(ps *param.PSet) error {
 		ps.Add("portfolio",
 			psetter.Float64{
