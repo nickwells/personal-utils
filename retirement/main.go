@@ -1,5 +1,6 @@
-// retirement
 package main
+
+// retirement
 
 import (
 	"github.com/nickwells/param.mod/v5/param"

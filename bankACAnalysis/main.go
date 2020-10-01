@@ -1,5 +1,6 @@
-// bankACAnalysis
 package main
+
+// bankACAnalysis
 
 import (
 	"bufio"
