@@ -19,6 +19,7 @@ import (
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/paramset"
 	"github.com/nickwells/twrap.mod/twrap"
+	"github.com/nickwells/versionparams.mod/versionparams"
 )
 
 // Created: Sun May 12 16:39:24 2019
@@ -314,6 +315,7 @@ var showCats = []string{catAll}
 
 func main() {
 	ps := paramset.NewOrDie(addParams,
+		versionparams.AddParams,
 		SetConfigFile,
 		param.SetProgramDescription(`analyse the bank account`))
 	ps.Parse()
