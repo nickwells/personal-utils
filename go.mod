@@ -10,6 +10,6 @@ require (
 	github.com/nickwells/param.mod/v5 v5.5.0
 	github.com/nickwells/testhelper.mod v1.14.0
 	github.com/nickwells/twrap.mod v1.4.10
-	github.com/nickwells/versionparams.mod v1.0.5
+	github.com/nickwells/versionparams.mod v1.0.6
 	github.com/nickwells/xdg.mod v1.0.5
 )
