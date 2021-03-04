@@ -3,4 +3,4 @@
 package main
 
 //go:generate mkparamfilefunc -funcs personalOnly
-//go:generate mkdoc
+//go:generate mkdoc -build-arg -tags -build-arg version_no_check
