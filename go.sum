@@ -14,10 +14,10 @@ github.com/nickwells/location.mod v1.2.19 h1:oLPtx+VHRzXdrjgcNxmGQg8GUAMVZpfqhFP
 github.com/nickwells/location.mod v1.2.19/go.mod h1:X7kCYStvR9ceZsIjW+xLksGQd60WBqyH1O2HV5BrMlc=
 github.com/nickwells/mathutil.mod v1.0.19 h1:2ypVypTmPB23TmaMCx54B6DDRubkmOjvcHT1EXKrS1A=
 github.com/nickwells/mathutil.mod v1.0.19/go.mod h1:pRpxz7tr1B8OEdnug+0Tjiv0UCrGEaOsbyyw3+FLfJE=
-github.com/nickwells/pager.mod v1.0.0 h1:i54zfDgqGd3b4ZqkeXOjKG6v/W/T96ZsjJbQxrFRjN0=
-github.com/nickwells/pager.mod v1.0.0/go.mod h1:wl4YLnlSucvQdGmqDl2NimjGAxsyLEpiheY63boQI7Q=
-github.com/nickwells/param.mod/v5 v5.7.4 h1:LptGL+qKLK4Lczc7HnLKNhQg6epwVwaalo7towCEEHw=
-github.com/nickwells/param.mod/v5 v5.7.4/go.mod h1:TdyIFQiblQB2D1kz+soOk6CBYMn3a7fjqbQs73lt7TE=
+github.com/nickwells/pager.mod v1.0.1 h1:UC+213qx73+8jRzM0Bki+0qlZX0eA59d979osl3PN5U=
+github.com/nickwells/pager.mod v1.0.1/go.mod h1:wl4YLnlSucvQdGmqDl2NimjGAxsyLEpiheY63boQI7Q=
+github.com/nickwells/param.mod/v5 v5.7.5 h1:Fll4L8ecgfLpInod/bIxd8+Z9csNmhb/errBC6gdocE=
+github.com/nickwells/param.mod/v5 v5.7.5/go.mod h1:2gjZ+AYpxKM7nQeiu37PWBvbbuPizgi02bHhJFw0Arg=
 github.com/nickwells/strdist.mod v1.1.2 h1:S7k5midagI1RgOyzwMQvjLS+MO/W06inQ9ZieFnN+AI=
 github.com/nickwells/strdist.mod v1.1.2/go.mod h1:kVBlSi2MtOHZ/SIpDRHYD/OXTDNyJq37gK7dqGnma4E=
 github.com/nickwells/testhelper.mod v1.15.1 h1:CHOqnYXRXkIUDAv0fubNx220MyKAiFMNmmKD1glFtvU=
@@ -26,8 +26,8 @@ github.com/nickwells/twrap.mod v1.4.13 h1:Big+VVxQRWbwufMoA9rHw5wrjN8Nec9/zeo87d
 github.com/nickwells/twrap.mod v1.4.13/go.mod h1:U/WQ+bTHs0BsLWHnrmHTwfJaZHnV3QIrq31VKjTgXPo=
 github.com/nickwells/version.mod v1.0.4 h1:yBNvjbifogARpjwnvxeOWbrvM2dBuI6jCh1T2MgS0ao=
 github.com/nickwells/version.mod v1.0.4/go.mod h1:XDT9WqE9ePwglLjsAirov6aP/yhhRDWNXtYZ23AmvPA=
-github.com/nickwells/versionparams.mod v1.0.15 h1:9nhW5WIjMpeHS8AC6pxukCVorZZhGNlX6Al64qWhky8=
-github.com/nickwells/versionparams.mod v1.0.15/go.mod h1:rGmYYGPnLge/A/4lHKscbhYntzUtmdNb7aBu5/YOGOM=
+github.com/nickwells/versionparams.mod v1.0.16 h1:n8HeJKiZcIu/cq3q4caiRR/WOvf4NzLFIGPhz97etOM=
+github.com/nickwells/versionparams.mod v1.0.16/go.mod h1:Ze2SQqZiZQoS0y8VQ80OR4jX113MEvP1IZFNWpY1hlY=
 github.com/nickwells/xdg.mod v1.0.5 h1:BkCim2ft//W1dlmh96z39YpIL4dJE7UQ1dDcMHtnfdU=
 github.com/nickwells/xdg.mod v1.0.5/go.mod h1:h8lRJMpY6oXdD6E3jJuolpO9QJE5FcTvUe8eyRzgyQo=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
