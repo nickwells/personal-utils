@@ -5,56 +5,39 @@ import (
 	"os"
 	"time"
 
-	"github.com/nickwells/col.mod/v2/col"
-	"github.com/nickwells/col.mod/v2/col/colfmt"
+	"github.com/nickwells/col.mod/v3/col"
+	"github.com/nickwells/col.mod/v3/col/colfmt"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // makeRpt creates the report object
 func makeRpt(m M) *col.Report {
-	h, err := col.NewHeader()
-	if err != nil {
-		fmt.Println("Error found while constructing the header:", err)
-		os.Exit(1)
-	}
+	const (
+		inflHead = "inflation adjusted"
+		pHead    = "Portfolio"
+		dHead    = "Drawing"
+	)
 
-	inflColHead := "inflation adjusted"
-	yearCol := []*col.Col{
+	return col.StdRpt(
 		col.New(&colfmt.Int{}, "Year"),
-	}
-	portfolioCols := []*col.Col{
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Portfolio", "min"),
-		col.New(&colfmt.Percent{W: 6, Prec: 2},
-			inflColHead, "Portfolio", "shrunk"),
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Portfolio", "avg"),
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Portfolio", "SD"),
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Portfolio", "max"),
-	}
-	drawingCols := []*col.Col{
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Drawing", "min"),
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Drawing", "avg"),
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Drawing", "SD"),
-		col.New(&colfmt.Float{W: 6}, inflColHead, "Drawing", "max"),
-	}
-	summaryCols := []*col.Col{
+
+		col.New(&colfmt.Float{W: 6}, inflHead, pHead, "min"),
+		col.New(&colfmt.Percent{W: 6, Prec: 2}, inflHead, pHead, "shrunk"),
+		col.New(&colfmt.Float{W: 6}, inflHead, pHead, "avg"),
+		col.New(&colfmt.Float{W: 6}, inflHead, pHead, "SD"),
+		col.New(&colfmt.Float{W: 6}, inflHead, pHead, "max"),
+
+		col.New(&colfmt.Float{W: 6}, inflHead, dHead, "min"),
+		col.New(&colfmt.Float{W: 6}, inflHead, dHead, "avg"),
+		col.New(&colfmt.Float{W: 6}, inflHead, dHead, "SD"),
+		col.New(&colfmt.Float{W: 6}, inflHead, dHead, "max"),
+
 		col.New(&colfmt.Percent{W: 7, Prec: 2}, "average", "%age of", "Savings"),
 		col.New(&colfmt.Percent{W: 7, Prec: 2}, "average", "nett", "return"),
 		col.New(&colfmt.Percent{W: 6, Prec: 2}, "drawing", "covered"),
 		col.New(&colfmt.Percent{W: 6, Prec: 2}, "drawing", "minimal"),
 		col.New(&colfmt.Percent{W: 8, Prec: 4}, "chance", "of going", "bust"),
-	}
-	columns := []*col.Col{}
-	columns = append(columns, yearCol...)
-	columns = append(columns, portfolioCols...)
-	columns = append(columns, drawingCols...)
-	columns = append(columns, summaryCols...)
-	rpt, err := col.NewReport(h, os.Stdout, columns...)
-	if err != nil {
-		fmt.Println("Error found while constructing the report:", err)
-		os.Exit(1)
-	}
-
-	return rpt
+	)
 }
 
 // colVals creates the column values for passing to the report
@@ -135,14 +118,7 @@ func (m M) printIntroText() {
 
 // reportModelParams will report the model parameters
 func (m M) reportModelParams() {
-	h, err := col.NewHeader()
-	if err != nil {
-		fmt.Println("Error found while constructing the header for params:",
-			err)
-		os.Exit(1)
-	}
-
-	rpt, err := col.NewReport(h, os.Stdout,
+	rpt := col.StdRpt(
 		col.New(&colfmt.Percent{W: 6, Prec: 2}, "Inflation"),
 		col.New(&colfmt.Float{W: 6}, "Initial", "Portfolio"),
 		col.New(&colfmt.Percent{W: 6, Prec: 2}, "Growth", "", "Mean"),
@@ -159,14 +135,9 @@ func (m M) reportModelParams() {
 		col.New(colfmt.Int{W: 6}, "Model", "years", "shown"),
 		col.New(colfmt.Int{W: 6}, "Model", "average", "set"),
 	)
-	if err != nil {
-		fmt.Println("Error found while constructing the report for params:",
-			err)
-		os.Exit(1)
-	}
 
 	fmt.Println()
-	err = rpt.PrintRow(
+	err := rpt.PrintRow(
 		m.inflationPct/100,
 		m.initialPortfolio,
 		m.rtnMeanPct/100, m.rtnSDPct/100, m.minGrowthPct/100,
@@ -191,15 +162,11 @@ func (m M) ReportModelMetrics() {
 		os.Exit(1)
 	}
 
-	rpt, err := col.NewReport(h, os.Stdout,
+	rpt := col.NewReport(h, os.Stdout,
 		col.New(colfmt.Int{W: 6}, "threads"),
 		col.New(colfmt.Int{W: 8}, "time taken (µs)", "overall"),
 	)
-	if err != nil {
-		fmt.Println("Error found while constructing the report for metrics:",
-			err)
-		os.Exit(1)
-	}
+
 	fmt.Println()
 	err = rpt.PrintRow(
 		m.modelMetrics.threadCount,

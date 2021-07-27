@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nickwells/col.mod/v2/col"
-	"github.com/nickwells/col.mod/v2/col/colfmt"
+	"github.com/nickwells/col.mod/v3/col"
+	"github.com/nickwells/col.mod/v3/col/colfmt"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/paramset"
 	"github.com/nickwells/twrap.mod/twrap"
@@ -453,13 +453,6 @@ func (s *Summaries) report(style reportStyle, cat string) {
 		fmt.Printf("*** category: %q is not recognised\n", cat)
 		return
 	}
-
-	h, err := col.NewHeader()
-	if err != nil {
-		fmt.Println("Error found while constructing the header:", err)
-		return
-	}
-
 	floatCol := colfmt.Float{
 		W:    10,
 		Prec: 2,
@@ -476,7 +469,7 @@ func (s *Summaries) report(style reportStyle, cat string) {
 		},
 	}
 
-	rpt, err := col.NewReport(h, os.Stdout,
+	rpt := col.StdRpt(
 		col.New(colfmt.String{W: tabWidth*s.maxDepth + s.maxNameWidth},
 			"Transaction Type"),
 		col.New(colfmt.Int{W: 5}, "Count"),
@@ -490,10 +483,6 @@ func (s *Summaries) report(style reportStyle, cat string) {
 		col.New(&pctCol, "%age"),
 		col.New(&floatCol, "Nett", "Amount"),
 	)
-	if err != nil {
-		fmt.Println("Error found while constructing the report:", err)
-		return
-	}
 
 	summ.report(rpt, summ.debitAmt, summ.creditAmt, 0, style)
 }
