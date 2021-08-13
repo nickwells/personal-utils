@@ -80,8 +80,8 @@ func New() *M {
 // initResults creates the results slice and initialises any necessary values
 func (m M) initResults() []*AggResults {
 	results := make([]*AggResults, m.years)
-	for y, r := range results {
-		r = NewAggResultsOrPanic(int(m.extremeSetSize))
+	for y := range results {
+		r := NewAggResultsOrPanic(int(m.extremeSetSize))
 		r.year = int64(y)
 		if r.year < m.yearsDefered {
 			r.withdrawalDefered = true
