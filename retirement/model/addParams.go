@@ -3,7 +3,7 @@ package model
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
@@ -16,7 +16,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Float64{
 				Value: &m.initialPortfolio,
 				Checks: []check.Float64{
-					check.Float64GT(0.0),
+					check.ValGT(0.0),
 				},
 			},
 			"set the starting size of your retirement portfolio",
@@ -27,7 +27,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Float64{
 				Value: &m.targetIncome,
 				Checks: []check.Float64{
-					check.Float64GT(0.0),
+					check.ValGT(0.0),
 				},
 			},
 			"set your desired retirement income",
@@ -38,7 +38,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Float64{
 				Value: &m.inflationPct,
 				Checks: []check.Float64{
-					check.Float64GT(0.0),
+					check.ValGT(0.0),
 				},
 			},
 			"set your expected percentage inflation rate",
@@ -48,7 +48,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Float64{
 				Value: &m.rtnMeanPct,
 				Checks: []check.Float64{
-					check.Float64GT(0.0),
+					check.ValGT(0.0),
 				},
 			},
 			"set your expected annual percentage return on the portfolio",
@@ -58,7 +58,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Int64{
 				Value: &m.yearsDefered,
 				Checks: []check.Int64{
-					check.Int64GT(0),
+					check.ValGT[int64](0),
 				},
 			},
 			"set the number of years to defer the start of withdrawing funds",
@@ -68,7 +68,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Float64{
 				Value: &m.rtnSDPct,
 				Checks: []check.Float64{
-					check.Float64GT(0),
+					check.ValGT[float64](0),
 				},
 			},
 			"set the range of the random variation around the average return."+
@@ -79,7 +79,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Int64{
 				Value: &m.crashInterval,
 				Checks: []check.Int64{
-					check.Int64GT(0),
+					check.ValGT[int64](0),
 				},
 			},
 			"set the number of years between market crashes. If this value is"+
@@ -92,7 +92,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Float64{
 				Value: &m.crashPct,
 				Checks: []check.Float64{
-					check.Float64GT(0.0),
+					check.ValGT(0.0),
 				},
 			},
 			"set the percentage by which the portfolio will decline in value"+
@@ -111,7 +111,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Int64{
 				Value: &m.drawingPeriodsPerYear,
 				Checks: []check.Int64{
-					check.Int64GT(0),
+					check.ValGT[int64](0),
 				},
 			},
 			"how many periods should the year be split into - are you going to"+
@@ -130,7 +130,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Int64{
 				Value: &m.years,
 				Checks: []check.Int64{
-					check.Int64GT(0),
+					check.ValGT[int64](0),
 				},
 			},
 			"set the number of years to simulate over",
@@ -140,7 +140,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Int64{
 				Value: &m.trials,
 				Checks: []check.Int64{
-					check.Int64GT(0),
+					check.ValGT[int64](0),
 				},
 			},
 			"set the number of trials per year",
@@ -150,7 +150,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			psetter.Int64{
 				Value: &m.extremeSetSize,
 				Checks: []check.Int64{
-					check.Int64GT(0),
+					check.ValGT[int64](0),
 				},
 			},
 			"the size of the set of extreme values. This is used to"+

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v5/param"
@@ -92,7 +92,8 @@ func addParams(ps *param.PSet) error {
 		psetter.StrList{
 			Value: &showCats,
 			Checks: []check.StringSlice{
-				check.StringSliceLenGT(0),
+				check.SliceLength[[]string](check.ValGT(0)),
+				check.SliceHasNoDups[[]string],
 			},
 		},
 		"show the report only for the listed categories",
