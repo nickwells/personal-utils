@@ -83,9 +83,7 @@ func addParams(ps *param.PSet) error {
 
 	ps.Add("summary", psetter.Nil{},
 		"show a summary report with no leaf transactions",
-		param.PostAction(func(_ location.L,
-			_ *param.ByName,
-			_ []string) error {
+		param.PostAction(func(_ location.L, _ *param.ByName, _ []string) error {
 			style = summaryReport
 			return nil
 		}))
