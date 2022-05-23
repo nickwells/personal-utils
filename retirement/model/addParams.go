@@ -20,7 +20,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				},
 			},
 			"set the starting size of your retirement portfolio",
-			param.AltName("p"),
+			param.AltNames("p"),
 			param.Attrs(param.MustBeSet))
 
 		ps.Add("income",
@@ -31,7 +31,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				},
 			},
 			"set your desired retirement income",
-			param.AltName("i"),
+			param.AltNames("i"),
 			param.Attrs(param.MustBeSet))
 
 		ps.Add("inflation",
@@ -42,7 +42,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				},
 			},
 			"set your expected percentage inflation rate",
-			param.AltName("ei"))
+			param.AltNames("ei"))
 
 		ps.Add("return",
 			psetter.Float64{
@@ -52,7 +52,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				},
 			},
 			"set your expected annual percentage return on the portfolio",
-			param.AltName("r"))
+			param.AltNames("r"))
 
 		ps.Add("defer",
 			psetter.Int64{
@@ -62,7 +62,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				},
 			},
 			"set the number of years to defer the start of withdrawing funds",
-			param.AltName("d"))
+			param.AltNames("d"))
 
 		ps.Add("return-range",
 			psetter.Float64{
@@ -73,7 +73,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			},
 			"set the range of the random variation around the average return."+
 				" This should be the standard deviation of the returns",
-			param.AltName("sd"))
+			param.AltNames("sd"))
 
 		ps.Add("crash-interval",
 			psetter.Int64{
@@ -86,7 +86,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				" not set then there will be no crashes in the simulation,"+
 				" otherwise there will, on average, be a crash every this"+
 				" many years",
-			param.AltName("ci"))
+			param.AltNames("ci"))
 
 		ps.Add("crash-prop",
 			psetter.Float64{
@@ -99,7 +99,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				" in a market crash."+
 				" If the crash interval value is not set then there will be no"+
 				" crashes in the simulation",
-			param.AltName("cp"))
+			param.AltNames("cp"))
 
 		ps.Add("min-return", psetter.Float64{Value: &m.minGrowthPct},
 			"this is a desired minimum real rate of growth of the portfolio."+
@@ -120,7 +120,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				" 12 times a year (monthly)"+
 				" 13 times a year (every 4 weeks)"+
 				" or 52 times a year (weekly)",
-			param.AltName("drawings-per-year"),
+			param.AltNames("drawings-per-year"),
 		)
 
 		ps.Add("min-income", psetter.Float64{Value: &m.minIncome},
@@ -134,7 +134,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				},
 			},
 			"set the number of years to simulate over",
-			param.AltName("y"))
+			param.AltNames("y"))
 
 		ps.Add("trials",
 			psetter.Int64{
@@ -144,7 +144,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				},
 			},
 			"set the number of trials per year",
-			param.AltName("t"))
+			param.AltNames("t"))
 
 		ps.Add("extreme-set-size",
 			psetter.Int64{
@@ -162,7 +162,7 @@ func AddParams(m *M) param.PSetOptFunc {
 
 		ps.Add("show-every-n-years", psetter.Int64{Value: &m.yearsToShow},
 			"only report every nth year (and the last)",
-			param.AltName("show-yrs"))
+			param.AltNames("show-yrs"))
 
 		ps.Add("show-intro", psetter.Bool{Value: &m.showIntroText},
 			"print a description of the model before showing the results")

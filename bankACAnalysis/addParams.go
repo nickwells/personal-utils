@@ -98,8 +98,7 @@ func addParams(ps *param.PSet) error {
 			},
 		},
 		"show the report only for the listed categories",
-		param.AltName("show-cats"),
-		param.AltName("cats"),
+		param.AltNames("show-cats", "cats"),
 	)
 
 	ps.Add("minimal-amount", psetter.Float64{Value: &minimalAmount},
