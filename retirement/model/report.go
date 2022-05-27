@@ -41,10 +41,10 @@ func makeRpt(m M) *col.Report {
 }
 
 // colVals creates the column values for passing to the report
-func colVals(m M, lastPfl float64, r *AggResults) ([]interface{}, float64) {
+func colVals(m M, lastPfl float64, r *AggResults) ([]any, float64) {
 	minInc, avgInc, sdInc, maxInc, _ := r.income.vals()
 	minPfl, avgPfl, sdPfl, maxPfl, _ := r.portfolio.vals()
-	vals := []interface{}{
+	vals := []any{
 		r.year + 1,
 		minPfl,
 		float64(r.portfolioDown) / float64(m.trials),
@@ -72,7 +72,7 @@ func (m M) Report(results []*AggResults) {
 	fmt.Println()
 	rpt := makeRpt(m)
 	lastPfl := m.initialPortfolio
-	var vals []interface{}
+	var vals []any
 	for i, r := range results {
 		vals, lastPfl = colVals(m, lastPfl, r)
 		if i%int(m.yearsToShow) == 0 || i == len(results)-1 {
