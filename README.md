@@ -29,3 +29,7 @@ go build -ldflags="$(goBuildLdflags)"
 ## bankACAnalysis
 
 [See here](bankACAnalysis/_bankACAnalysis.DOC.md)
+
+## badDeprecation
+
+[See here](badDeprecation/_badDeprecation.DOC.md)
