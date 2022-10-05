@@ -17,7 +17,7 @@ type timer struct {
 // operation is complete. It is suggested that you should pass this to defer
 // as follows.
 //
-//     defer t.TimeIt()()
+//	defer t.TimeIt()()
 func (t *timer) TimeIt() func() {
 	t.start = time.Now()
 	return func() {

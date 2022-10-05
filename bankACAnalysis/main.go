@@ -446,7 +446,7 @@ func (s *Summaries) normalise(str string) string {
 	return str
 }
 
-//  report will report the summaries
+// report will report the summaries
 func (s *Summaries) report(style reportStyle, cat string) {
 	summ, ok := s.summaries[cat]
 	if !ok {
