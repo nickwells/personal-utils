@@ -21,7 +21,7 @@ func main() {
 			continue
 		}
 		lineNum = 0
-		var scanner *bufio.Scanner = bufio.NewScanner(f)
+		scanner := bufio.NewScanner(f)
 		for scanner.Scan() {
 			lineNum++
 			line := scanner.Text()
