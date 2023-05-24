@@ -95,7 +95,7 @@ func main() {
 	r := datagen.NewRecord("",
 		datagen.NewField("Transaction Date",
 			datagen.NewTimeGen(
-				datagen.TimeGenSetLayout("2006/01/02"),
+				datagen.TimeGenSetLayout("02/01/2006"),
 				datagen.TimeGenSetInitialTime(startTime))),
 		datagen.NewField("Transaction Type", transTypeGen),
 		datagen.NewField("Sort Code", sortCodeGen),
