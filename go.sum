@@ -2,8 +2,8 @@ github.com/nickwells/check.mod/v2 v2.1.10 h1:OSHCxYdF9LLa/09Wth1LHkEaFHFBK62Ah6U
 github.com/nickwells/check.mod/v2 v2.1.10/go.mod h1:7mQeHzBP/hXXLpurLxtYAWC/ObtpST0eYixy10+cTP4=
 github.com/nickwells/col.mod/v3 v3.0.15 h1:q9q/uirG/A/xNR7vai0Vxa9sqLKeHJg54OEPbh3/CUE=
 github.com/nickwells/col.mod/v3 v3.0.15/go.mod h1:a+cDAOUeVino2G6rKywv2xRfH3I2o3jkyzi7eXnl37w=
-github.com/nickwells/datagen.mod v0.0.0 h1:o3rSLDcOp76KPtPMW08Ng13KZWnKS8vgLu2Aa6I/KGc=
-github.com/nickwells/datagen.mod v0.0.0/go.mod h1:+pPq7zMEcMehDG4ZCjx37D165KHi4meclJ8/05wnYOo=
+github.com/nickwells/datagen.mod v0.0.1 h1:dXmeaBNYxYOeifigiiAxTfvC8R6/Qtr1v5Lxq1qbhJQ=
+github.com/nickwells/datagen.mod v0.0.1/go.mod h1:9oAow/4QWWd/rlPywvdkP5+/vk0dZmGtVDaBDvREJJQ=
 github.com/nickwells/english.mod v1.1.4 h1:gY8B1DxHgoluXesTKLQ6m3fcmcWnyVq3oyWswozKlmw=
 github.com/nickwells/english.mod v1.1.4/go.mod h1:IyeQavDOac+BqnX85asYOUqSzVkCBWg2IDACIs5iQ0M=
 github.com/nickwells/errutil.mod v1.2.12 h1:fUnPebihRTdxm8Lalvd0niKDMT0loM+sgW+jtFp4dgM=
