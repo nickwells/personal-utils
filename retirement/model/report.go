@@ -11,7 +11,7 @@ import (
 )
 
 // makeRpt creates the report object
-func makeRpt(m M) *col.Report {
+func makeRpt() *col.Report {
 	const (
 		inflHead = "inflation adjusted"
 		pHead    = "Portfolio"
@@ -70,7 +70,7 @@ func (m M) Report(results []*AggResults) {
 	}
 
 	fmt.Println()
-	rpt := makeRpt(m)
+	rpt := makeRpt()
 	lastPfl := m.initialPortfolio
 	var vals []any
 	for i, r := range results {
