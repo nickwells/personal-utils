@@ -9,26 +9,32 @@ import (
 
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/datagen.mod/datagen"
-	"github.com/nickwells/param.mod/v5/param"
-	"github.com/nickwells/param.mod/v5/param/paramset"
-	"github.com/nickwells/param.mod/v5/param/psetter"
+	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // Created: Sat Aug 20 12:19:22 2022
 
-var (
-	count     int64 = 1
-	startTime       = time.Date(
-		2022, time.August, 25,
-		13, 0, 0, 0,
-		time.FixedZone("UTC", 0))
-)
+var startTime = time.Date(
+	2022, time.August, 25,
+	13, 0, 0, 0,
+	time.FixedZone("UTC", 0))
+
+// Prog holds the parameters and current status of the program
+type Prog struct {
+	// the number of records to generate
+	count int64
+}
+
+func NewProg() *Prog {
+	return &Prog{
+		count: 1,
+	}
+}
 
 func main() {
-	ps := paramset.NewOrDie(addParams,
-		param.SetProgramDescription(
-			"generates test data from a spec"),
-	)
+	prog := NewProg()
+	ps := makeParamSet(prog)
 
 	ps.Parse()
 
@@ -110,21 +116,23 @@ func main() {
 	)
 
 	fmt.Println(strings.Join(r.GenerateTitles(), ","))
-	for i := int64(0); i < count; i++ {
+	for i := int64(0); i < prog.count; i++ {
 		fmt.Println(strings.Join(r.Generate(), ","))
 		r.Next()
 	}
 }
 
 // addParams will add parameters to the passed ParamSet
-func addParams(ps *param.PSet) error {
-	ps.Add("count",
-		psetter.Int64{
-			ValueReqMandatory: psetter.ValueReqMandatory{},
-			Value:             &count,
-			Checks:            []check.Int64{check.ValGT[int64](0)},
-		},
-		"how many records to generate")
+func addParams(prog *Prog) func(ps *param.PSet) error {
+	return func(ps *param.PSet) error {
+		ps.Add("count",
+			psetter.Int[int64]{
+				ValueReqMandatory: psetter.ValueReqMandatory{},
+				Value:             &prog.count,
+				Checks:            []check.Int64{check.ValGT[int64](0)},
+			},
+			"how many records to generate")
 
-	return nil
+		return nil
+	}
 }

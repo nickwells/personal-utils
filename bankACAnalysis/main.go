@@ -16,10 +16,6 @@ import (
 
 	"github.com/nickwells/col.mod/v3/col"
 	"github.com/nickwells/col.mod/v3/col/colfmt"
-	"github.com/nickwells/param.mod/v5/param"
-	"github.com/nickwells/param.mod/v5/param/paramset"
-	"github.com/nickwells/twrap.mod/twrap"
-	"github.com/nickwells/versionparams.mod/versionparams"
 )
 
 // Created: Sun May 12 16:39:24 2019
@@ -97,7 +93,7 @@ func openFileOrDie(fileName, desc string) *os.File {
 
 // populateParents constructs the parent tree of transactions from the
 // transaction map file
-func (s *Summaries) populateParents() {
+func (s *Summaries) populateParents(prog *Prog) {
 	s.parentOf[catAll] = catAll
 	err := s.addParent(catAll, catUnknown)
 	if err != nil {
@@ -115,7 +111,7 @@ func (s *Summaries) populateParents() {
 		os.Exit(1)
 	}
 
-	mf := openFileOrDie(xactMapFileName, xactnMapDesc)
+	mf := openFileOrDie(prog.xactMapFileName, xactnMapDesc)
 	defer mf.Close()
 
 	mScanner := bufio.NewScanner(mf)
@@ -131,15 +127,15 @@ func (s *Summaries) populateParents() {
 		err = s.addParent(parts[0], parts[1])
 		if err != nil {
 			fmt.Printf("%s:%d: Bad entry in the %s: %s\n",
-				xactMapFileName, lineNum, xactnMapDesc, err)
+				prog.xactMapFileName, lineNum, xactnMapDesc, err)
 		}
 	}
 }
 
 // populateEdits constructs the slice of editing rules to be performed on
 // transaction descriptions
-func (s *Summaries) populateEdits() {
-	ef := openFileOrDie(editFileName, "transaction edits")
+func (s *Summaries) populateEdits(prog *Prog) {
+	ef := openFileOrDie(prog.editFileName, "transaction edits")
 	defer ef.Close()
 
 	eScanner := bufio.NewScanner(ef)
@@ -160,7 +156,7 @@ func (s *Summaries) populateEdits() {
 		parts := strings.SplitN(line, "=", 2)
 		if len(parts) != 2 {
 			fmt.Printf("%s:%d: %s: Missing '=' : %s\n",
-				editFileName, lineNum, errIntro, line)
+				prog.editFileName, lineNum, errIntro, line)
 			errFound = true
 			continue
 		}
@@ -170,14 +166,14 @@ func (s *Summaries) populateEdits() {
 			if prevType == editTypeSearch {
 				fmt.Printf(
 					"%s:%d: %s: %q entry missing for previous search\n",
-					editFileName, lineNum, errIntro, editTypeReplace)
+					prog.editFileName, lineNum, errIntro, editTypeReplace)
 			}
 			errFound = false
 			searchStr = parts[1]
 			searchRE, err = regexp.Compile(searchStr)
 			if err != nil {
 				fmt.Printf("%s:%d: %s: Couldn't compile the regexp: %s\n",
-					editFileName, lineNum, errIntro, err)
+					prog.editFileName, lineNum, errIntro, err)
 				errFound = true
 			}
 		case editTypeReplace:
@@ -190,7 +186,7 @@ func (s *Summaries) populateEdits() {
 			}
 		default:
 			fmt.Printf("%s:%d: %s: Bad type: %s\n",
-				editFileName, lineNum, errIntro, entryType)
+				prog.editFileName, lineNum, errIntro, entryType)
 			errFound = true
 		}
 		prevType = entryType
@@ -198,7 +194,7 @@ func (s *Summaries) populateEdits() {
 }
 
 // initSummaries returns an initialised Summaries structure
-func initSummaries() *Summaries {
+func (prog *Prog) initSummaries() *Summaries {
 	s := Summaries{
 		parentOf:  make(map[string]string),
 		summaries: make(map[string]*Summary),
@@ -208,9 +204,9 @@ func initSummaries() *Summaries {
 		name:       catAll,
 		components: make(map[string]*Summary),
 	}
-	s.populateParents()
+	s.populateParents(prog)
 
-	s.populateEdits()
+	s.populateEdits(prog)
 
 	return &s
 }
@@ -288,70 +284,73 @@ func (s *Summary) add(xa Xactn) {
 	}
 }
 
-// the name of the file containing the transactions
-var acFileName string
+// Prog holds the parameters and current status of the program
+type Prog struct {
+	// the name of a file containing  transactions
+	acFileName string
+	// all the transaction files, including any given after the terminal
+	// parameter
+	files []string
 
-// the name of the file containing the replacements to make to transaction
-// names
-var editFileName string
+	// the name of the file containing the mappings between transaction names
+	// and categories
+	xactMapFileName string
 
-// the name of the file containing the mappings between transaction names and
-// categories
-var xactMapFileName string
+	// the name of the file containing the replacements to make to
+	// transaction names
+	editFileName string
 
-// don't suppress printing of summary records for which there are no
-// transactions
-var showZeros bool
+	// don't suppress printing of summary records for which there are no
+	// transactions
+	showZeros bool
 
-// Skip the first line in the file of transactions. The assumption is that
-// the first line is a set of headings
-var skipFirstLine = true
+	// Skip the first (header) line in the file of transactions.
+	skipFirstLine bool
 
-var style = showLeafEntries
+	style         reportStyle
+	minimalAmount float64
+	showCats      []string
+}
 
-var minimalAmount float64
-
-var showCats = []string{catAll}
+func NewProg() *Prog {
+	return &Prog{
+		skipFirstLine: true,
+		style:         showLeafEntries,
+		showCats:      []string{catAll},
+	}
+}
 
 func main() {
-	ps := paramset.NewOrDie(addParams,
-		versionparams.AddParams,
-		SetConfigFile,
-		param.SetProgramDescription(`analyse the bank account`))
+	prog := NewProg()
+	ps := makeParamSet(prog)
+
 	ps.Parse()
-	files := ps.Remainder()
-	if acFileName != "" {
-		files = append(files, acFileName)
+
+	prog.files = ps.Remainder()
+	if prog.acFileName != "" {
+		prog.files = append(prog.files, prog.acFileName)
 	}
-	if len(files) == 0 {
-		twc := twrap.NewTWConfOrPanic()
-		twc.Wrap("Some account files must be given, either as a named"+
-			" parameter or else as a list at the end of the parameters"+
-			" following a "+ps.TerminalParam(),
-			0)
-		os.Exit(1)
-	}
-	summaries := getAccountData(files)
+	summaries := prog.getAccountData()
 
 	sep := ""
-	for _, cat := range showCats {
+	for _, cat := range prog.showCats {
 		fmt.Print(sep)
 		sep = "\n"
-		summaries.report(style, cat)
+		summaries.report(prog, cat)
 	}
 }
 
 // getAccountData opens each file in turn and reads from it to populate the
 // summaries
-func getAccountData(files []string) *Summaries {
-	checkFiles(files)
+func (prog *Prog) getAccountData() *Summaries {
+	prog.checkFiles()
 
-	s := initSummaries()
+	s := prog.initSummaries()
 
-	for _, name := range files {
+	for _, name := range prog.files {
 		f := openFileOrDie(name, "bank account")
 		r := csv.NewReader(f)
-		s.populateSummaries(name, r)
+		s.populateSummaries(prog, name, r)
 		f.Close()
 	}
 	return s
@@ -359,10 +358,15 @@ func getAccountData(files []string) *Summaries {
 
 // checkFiles checks the slice of files and if a duplicate is found it will
 // report an error and exit
-func checkFiles(files []string) {
+func (prog *Prog) checkFiles() {
+	if len(prog.files) == 0 {
+		fmt.Println("Some account files must be given")
+		os.Exit(1)
+	}
+
 	m := map[string]bool{}
 	var dupFound int
-	for _, f := range files {
+	for _, f := range prog.files {
 		if m[f] {
 			fmt.Println("File name", f,
 				"appears more than once in the list of files")
@@ -377,7 +381,7 @@ func checkFiles(files []string) {
 
 // populateSummaries fills in the summaries from the lines read from the
 // io.Reader
-func (s *Summaries) populateSummaries(name string, r *csv.Reader) {
+func (s *Summaries) populateSummaries(prog *Prog, name string, r *csv.Reader) {
 	lineNum := 0
 	for {
 		parts, err := r.Read()
@@ -391,7 +395,7 @@ func (s *Summaries) populateSummaries(name string, r *csv.Reader) {
 		}
 
 		lineNum++
-		if skipFirstLine && lineNum == 1 {
+		if prog.skipFirstLine && lineNum == 1 {
 			continue // ignore the first line of headings
 		}
 		xa, err := s.mkXactn(lineNum, parts)
@@ -447,7 +451,7 @@ func (s *Summaries) normalise(str string) string {
 }
 
 // report will report the summaries
-func (s *Summaries) report(style reportStyle, cat string) {
+func (s *Summaries) report(prog *Prog, cat string) {
 	summ, ok := s.summaries[cat]
 	if !ok {
 		fmt.Printf("*** category: %q is not recognised\n", cat)
@@ -484,7 +488,7 @@ func (s *Summaries) report(style reportStyle, cat string) {
 		col.New(&floatCol, "Nett", "Amount"),
 	)
 
-	summ.report(rpt, summ.debitAmt, summ.creditAmt, 0, style)
+	summ.report(prog, rpt, summ.debitAmt, summ.creditAmt, 0)
 }
 
 // calcPct calculates the amount as a proportion of the total, if the total
@@ -496,14 +500,19 @@ func calcPct(amt, tot float64) float64 {
 	return amt / tot
 }
 
-func (s *Summary) report(rpt *col.Report, totDebit, totCredit float64, indent int, style reportStyle) {
-	if style == summaryReport && len(s.components) == 0 {
+func (s *Summary) report(
+	prog *Prog,
+	rpt *col.Report,
+	totDebit, totCredit float64,
+	indent int,
+) {
+	if prog.style == summaryReport && len(s.components) == 0 {
 		return
 	}
-	if !showZeros && s.count == 0 {
+	if !prog.showZeros && s.count == 0 {
 		return
 	}
-	if s.creditAmt+s.debitAmt < minimalAmount {
+	if s.creditAmt+s.debitAmt < prog.minimalAmount {
 		return
 	}
 
@@ -527,7 +536,7 @@ func (s *Summary) report(rpt *col.Report, totDebit, totCredit float64, indent in
 			(compList[j].debitAmt + compList[j].creditAmt)
 	})
 	for _, c := range compList {
-		c.report(rpt, totDebit, totCredit, indent+1, style)
+		c.report(prog, rpt, totDebit, totCredit, indent+1)
 	}
 }
 

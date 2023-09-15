@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/v2/check"
-	"github.com/nickwells/param.mod/v5/param"
-	"github.com/nickwells/param.mod/v5/param/psetter"
+	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // AddParams creates and returns a function that will set the parameters on a
@@ -13,7 +13,7 @@ import (
 func AddParams(m *M) param.PSetOptFunc {
 	return func(ps *param.PSet) error {
 		ps.Add("portfolio",
-			psetter.Float64{
+			psetter.Float[float64]{
 				Value: &m.initialPortfolio,
 				Checks: []check.Float64{
 					check.ValGT(0.0),
@@ -24,7 +24,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.Attrs(param.MustBeSet))
 
 		ps.Add("income",
-			psetter.Float64{
+			psetter.Float[float64]{
 				Value: &m.targetIncome,
 				Checks: []check.Float64{
 					check.ValGT(0.0),
@@ -35,7 +35,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.Attrs(param.MustBeSet))
 
 		ps.Add("inflation",
-			psetter.Float64{
+			psetter.Float[float64]{
 				Value: &m.inflationPct,
 				Checks: []check.Float64{
 					check.ValGT(0.0),
@@ -45,7 +45,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("ei"))
 
 		ps.Add("return",
-			psetter.Float64{
+			psetter.Float[float64]{
 				Value: &m.rtnMeanPct,
 				Checks: []check.Float64{
 					check.ValGT(0.0),
@@ -55,7 +55,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("r"))
 
 		ps.Add("defer",
-			psetter.Int64{
+			psetter.Int[int64]{
 				Value: &m.yearsDefered,
 				Checks: []check.Int64{
 					check.ValGT[int64](0),
@@ -65,7 +65,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("d"))
 
 		ps.Add("return-range",
-			psetter.Float64{
+			psetter.Float[float64]{
 				Value: &m.rtnSDPct,
 				Checks: []check.Float64{
 					check.ValGT[float64](0),
@@ -76,7 +76,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("sd"))
 
 		ps.Add("crash-interval",
-			psetter.Int64{
+			psetter.Int[int64]{
 				Value: &m.crashInterval,
 				Checks: []check.Int64{
 					check.ValGT[int64](0),
@@ -89,7 +89,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("ci"))
 
 		ps.Add("crash-prop",
-			psetter.Float64{
+			psetter.Float[float64]{
 				Value: &m.crashPct,
 				Checks: []check.Float64{
 					check.ValGT(0.0),
@@ -101,14 +101,14 @@ func AddParams(m *M) param.PSetOptFunc {
 				" crashes in the simulation",
 			param.AltNames("cp"))
 
-		ps.Add("min-return", psetter.Float64{Value: &m.minGrowthPct},
+		ps.Add("min-return", psetter.Float[float64]{Value: &m.minGrowthPct},
 			"this is a desired minimum real rate of growth of the portfolio."+
 				" The income taken from the portfolio will be adjusted to"+
 				" try to ensure that the portfolio grows by at least this much"+
 				" plus inflation each year, subject to the minimum income")
 
 		ps.Add("periods",
-			psetter.Int64{
+			psetter.Int[int64]{
 				Value: &m.drawingPeriodsPerYear,
 				Checks: []check.Int64{
 					check.ValGT[int64](0),
@@ -123,11 +123,11 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("drawings-per-year"),
 		)
 
-		ps.Add("min-income", psetter.Float64{Value: &m.minIncome},
+		ps.Add("min-income", psetter.Float[float64]{Value: &m.minIncome},
 			"set the lowest income that you can afford to receive")
 
 		ps.Add("years",
-			psetter.Int64{
+			psetter.Int[int64]{
 				Value: &m.years,
 				Checks: []check.Int64{
 					check.ValGT[int64](0),
@@ -137,7 +137,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("y"))
 
 		ps.Add("trials",
-			psetter.Int64{
+			psetter.Int[int64]{
 				Value: &m.trials,
 				Checks: []check.Int64{
 					check.ValGT[int64](0),
@@ -147,7 +147,7 @@ func AddParams(m *M) param.PSetOptFunc {
 			param.AltNames("t"))
 
 		ps.Add("extreme-set-size",
-			psetter.Int64{
+			psetter.Int[int64]{
 				Value: &m.extremeSetSize,
 				Checks: []check.Int64{
 					check.ValGT[int64](0),
@@ -160,7 +160,7 @@ func AddParams(m *M) param.PSetOptFunc {
 				" reported would be the average of the 10 smallest values"+
 				" observed.")
 
-		ps.Add("show-every-n-years", psetter.Int64{Value: &m.yearsToShow},
+		ps.Add("show-every-n-years", psetter.Int[int64]{Value: &m.yearsToShow},
 			"only report every nth year (and the last)",
 			param.AltNames("show-yrs"))
 

@@ -3,7 +3,7 @@ package model
 import (
 	"testing"
 
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 // differs compares the two slices and returns true if they differ
