@@ -28,6 +28,8 @@ github.com/nickwells/testhelper.mod/v2 v2.3.0 h1:b/EpnHiYr8dnr6C0a6zW2KAyHgfQ72p
 github.com/nickwells/testhelper.mod/v2 v2.3.0/go.mod h1:pdhf+XHRINEUH6a0OcwC98ETD3ZluAXKA5xOhC2I2Qk=
 github.com/nickwells/twrap.mod v1.5.4 h1:RX+zbL3+oe9zLUKLEkVkk2E2m6B7HEvJNyU2PDOPkN0=
 github.com/nickwells/twrap.mod v1.5.4/go.mod h1:zUdD2gq6DnMiLn1uWuJWUpiOCuQvlxS1p5yJGxdp7uk=
+github.com/nickwells/verbose.mod v1.0.64 h1:VA1PPCwsEFPDda4m8aXXAnFDPaQrGCz6Y+W5sBENfXI=
+github.com/nickwells/verbose.mod v1.0.64/go.mod h1:xePDMhF/dTEWlwxNeHy8FXXjVhpgvHf6k20sI4hHuaI=
 github.com/nickwells/versionparams.mod v1.2.5 h1:lbSsHrs3aRY36IWSQUnJSlPDjxI3AWN/+CoODtkgYko=
 github.com/nickwells/versionparams.mod v1.2.5/go.mod h1:XiDsUpAHy8wV/psZv5KpBV4ZTfdnQP3ybPfZ7di8KKc=
 github.com/nickwells/xdg.mod v1.0.9 h1:IQhytP6QBCC2xrSVXTE0GDbYJSD8E25H6sSqd7jtCHA=
