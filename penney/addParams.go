@@ -17,6 +17,14 @@ func addParams(prog *Prog) param.PSetOptFunc {
 				},
 			},
 			"how many coin tosses should be performed")
+		ps.Add("coins",
+			psetter.Int[int]{
+				Value: &prog.coinCount,
+				Checks: []check.ValCk[int]{
+					check.ValGT[int](2),
+				},
+			},
+			"how many coins should be chosen")
 		return nil
 	}
 }
