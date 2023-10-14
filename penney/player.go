@@ -39,10 +39,11 @@ func (p Player) reportResults(rpt *col.Report, prog Prog) {
 	vals = append(vals, p.ID)
 	for i, r := range p.r {
 		r.notify(0, "")
+		vals = append(vals, prog.uintToStr(p.choices[i]))
+		if prog.showWinCount {
+			vals = append(vals, r.myWins)
+		}
 		vals = append(vals,
-			prog.uintToStr(p.choices[i]),
-			r.myWins,
-			float64(r.myWins)/float64(r.totalWins),
 			r.maxRunLength,
 			float64(r.totalRunLength)/float64(r.runCount))
 	}

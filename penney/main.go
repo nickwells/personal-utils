@@ -19,11 +19,17 @@ func main() {
 	p2 := NewPlayer("P2", prog.makeOtherChoices(p1.choices))
 	prog.play(p1, p2)
 
-	cols := make([]*col.Col, 0, prog.choiceCount()*3)
-	for i := 0; i < prog.choiceCount(); i++ {
+	perChoiceCols := 4
+	if prog.showWinCount {
+		perChoiceCols++
+	}
+	cols := make([]*col.Col, 0, prog.choiceCount()*perChoiceCols)
+	for i := 0; i < len(p1.choices); i++ {
 		cols = append(cols, col.New(colfmt.String{W: prog.coinCount}, "chc"))
-		cols = append(cols,
-			col.New(colfmt.Int{W: mathutil.Digits[int](prog.trials)}, "wins"))
+		if prog.showWinCount {
+			cols = append(cols,
+				col.New(colfmt.Int{W: mathutil.Digits[int](prog.trials)}, "wins"))
+		}
 		cols = append(cols,
 			col.New(&colfmt.Percent{W: 6, Prec: 2}, "%age"))
 		cols = append(cols,

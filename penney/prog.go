@@ -10,6 +10,8 @@ type Prog struct {
 	coinCount          int
 	copyCount          int // must be < coinCount
 	leadingPickupShift int // must be < coinCount
+	tryAll             bool
+	showWinCount       bool
 }
 
 // NewProg returns a new Prog instance with the default values set

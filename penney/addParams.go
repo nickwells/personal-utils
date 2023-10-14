@@ -25,6 +25,11 @@ func addParams(prog *Prog) param.PSetOptFunc {
 				},
 			},
 			"how many coins should be chosen")
+		ps.Add("show-win-count",
+			psetter.Bool{
+				Value: &prog.showWinCount,
+			},
+			"show the number of wins")
 		return nil
 	}
 }
