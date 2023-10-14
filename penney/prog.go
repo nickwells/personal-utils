@@ -67,6 +67,25 @@ func (prog Prog) makeOtherChoices(choices []uint) []uint {
 	return otherChoices
 }
 
+// makeAllOtherChoices constructs the other (winning) choices given the choices
+// of the first player
+func (prog Prog) makeAllOtherChoices(choices []uint) [][]uint {
+	limit := uint(prog.choiceCount())
+	allOtherChoices := make([][]uint, len(choices))
+	for i, c := range choices {
+		allOtherChoices[i] = make([]uint, len(choices)-1)
+		idx := 0
+		for j := uint(0); j < limit; j++ {
+			if j == c {
+				continue
+			}
+			allOtherChoices[i][idx] = j
+			idx++
+		}
+	}
+	return allOtherChoices
+}
+
 // makeBitMask returns a bit-mask covering all the bits in the value
 func (prog Prog) makeBitMask() uint {
 	var bm uint

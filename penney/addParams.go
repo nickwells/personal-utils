@@ -25,6 +25,11 @@ func addParams(prog *Prog) param.PSetOptFunc {
 				},
 			},
 			"how many coins should be chosen")
+		ps.Add("try-all",
+			psetter.Bool{
+				Value: &prog.tryAll,
+			},
+			"player 2 tries all the possible alternatives")
 		ps.Add("show-win-count",
 			psetter.Bool{
 				Value: &prog.showWinCount,

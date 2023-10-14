@@ -16,9 +16,30 @@ func main() {
 	ps.Parse()
 
 	p1 := NewPlayer("P1", prog.makeAllPossibleChoices())
-	p2 := NewPlayer("P2", prog.makeOtherChoices(p1.choices))
-	prog.play(p1, p2)
 
+	if prog.tryAll {
+		allOtherChoices := prog.makeAllOtherChoices(p1.choices)
+		for i, c := range p1.choices {
+			dupChoice := make([]uint, len(p1.choices)-1)
+			for idx := range dupChoice {
+				dupChoice[idx] = c
+			}
+			p1rpt := NewPlayer(p1.ID, dupChoice)
+			p2 := NewPlayer("P2", allOtherChoices[i])
+			prog.play(p1rpt, p2)
+
+			prog.reportResults(p1rpt, p2)
+		}
+	} else {
+		p2 := NewPlayer("P2", prog.makeOtherChoices(p1.choices))
+		prog.play(p1, p2)
+
+		prog.reportResults(p1, p2)
+	}
+}
+
+// reportResults reports the results for the two players
+func (prog Prog) reportResults(p1, p2 *Player) {
 	perChoiceCols := 4
 	if prog.showWinCount {
 		perChoiceCols++
@@ -42,6 +63,6 @@ func main() {
 		os.Stdout,
 		col.New(colfmt.String{}, "player"),
 		cols...)
-	p1.reportResults(rpt, *prog)
-	p2.reportResults(rpt, *prog)
+	p1.reportResults(rpt, prog)
+	p2.reportResults(rpt, prog)
 }
