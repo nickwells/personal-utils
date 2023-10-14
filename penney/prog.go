@@ -12,6 +12,7 @@ type Prog struct {
 	leadingPickupShift int // must be < coinCount
 	tryAll             bool
 	showWinCount       bool
+	showRoughly        bool
 }
 
 // NewProg returns a new Prog instance with the default values set

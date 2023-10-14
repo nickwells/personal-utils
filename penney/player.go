@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/col.mod/v3/col"
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
 )
 
 type Player struct {
@@ -43,6 +44,13 @@ func (p Player) reportResults(rpt *col.Report, prog Prog) {
 		if prog.showWinCount {
 			vals = append(vals, r.myWins)
 		}
+
+		percVal := float64(r.myWins) / float64(r.totalWins)
+		if prog.showRoughly {
+			percVal = mathutil.Roughly(percVal, 1)
+		}
+		vals = append(vals, percVal)
+
 		vals = append(vals,
 			r.maxRunLength,
 			float64(r.totalRunLength)/float64(r.runCount))

@@ -35,6 +35,14 @@ func addParams(prog *Prog) param.PSetOptFunc {
 				Value: &prog.showWinCount,
 			},
 			"show the number of wins")
+		ps.Add("show-rough-results",
+			psetter.Bool{
+				Value: &prog.showRoughly,
+			},
+			"show the proportion of wins as the nearest 'neat' figure"+
+				" within 1% of the actual figure (that's within 1/100 of"+
+				" the percentage value)",
+			param.AltNames("show-roughly"))
 		return nil
 	}
 }
