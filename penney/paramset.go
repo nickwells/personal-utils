@@ -14,6 +14,7 @@ func makeParamSet(prog *Prog) *param.PSet {
 		versionparams.AddParams,
 
 		addParams(prog),
+		addNotes(prog),
 
 		param.SetProgramDescription(
 			"This simulates the behaviour of strategies in the Penney game."),
