@@ -44,19 +44,25 @@ func (prog Prog) reportResults(p1, p2 *Player) {
 	if prog.showWinCount {
 		perChoiceCols++
 	}
+	if prog.showRunInfo {
+		perChoiceCols += 2
+	}
 	cols := make([]*col.Col, 0, prog.choiceCount()*perChoiceCols)
 	for i := 0; i < len(p1.choices); i++ {
 		cols = append(cols, col.New(colfmt.String{W: prog.coinCount}, "chc"))
 		if prog.showWinCount {
+			maxWinWidth := mathutil.Digits[int](prog.trials)
 			cols = append(cols,
-				col.New(colfmt.Int{W: mathutil.Digits[int](prog.trials)}, "wins"))
+				col.New(colfmt.Int{W: maxWinWidth}, "wins"))
 		}
 		cols = append(cols,
 			col.New(&colfmt.Percent{W: 6, Prec: 2}, "%age"))
-		cols = append(cols,
-			col.New(&colfmt.Int{W: 3}, "max", "run"))
-		cols = append(cols,
-			col.New(&colfmt.Float{W: 5, Prec: 1}, "avg", "run"))
+		if prog.showRunInfo {
+			cols = append(cols,
+				col.New(&colfmt.Int{W: 3}, "max", "run"))
+			cols = append(cols,
+				col.New(&colfmt.Float{W: 5, Prec: 1}, "avg", "run"))
+		}
 	}
 	hdr := col.NewHeaderOrPanic()
 	rpt := col.NewReport(hdr,

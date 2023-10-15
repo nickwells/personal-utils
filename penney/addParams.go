@@ -35,6 +35,12 @@ func addParams(prog *Prog) param.PSetOptFunc {
 				Value: &prog.showWinCount,
 			},
 			"show the number of wins")
+		ps.Add("show-run-info",
+			psetter.Bool{
+				Value: &prog.showRunInfo,
+			},
+			"show the run information where a run is a"+
+				" sequence of wins by the same player")
 		ps.Add("show-rough-results",
 			psetter.Bool{
 				Value: &prog.showRoughly,

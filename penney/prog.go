@@ -12,6 +12,7 @@ type Prog struct {
 	leadingPickupShift int // must be < coinCount
 	tryAll             bool
 	showWinCount       bool
+	showRunInfo        bool
 	showRoughly        bool
 }
 

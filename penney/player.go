@@ -51,9 +51,11 @@ func (p Player) reportResults(rpt *col.Report, prog Prog) {
 		}
 		vals = append(vals, percVal)
 
-		vals = append(vals,
-			r.maxRunLength,
-			float64(r.totalRunLength)/float64(r.runCount))
+		if prog.showRunInfo {
+			vals = append(vals,
+				r.maxRunLength,
+				float64(r.totalRunLength)/float64(r.runCount))
+		}
 	}
 	err := rpt.PrintRow(vals...)
 	if err != nil {
