@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/nickwells/col.mod/v3/col"
-	"github.com/nickwells/col.mod/v3/col/colfmt"
+	"github.com/nickwells/col.mod/v4/col"
+	"github.com/nickwells/col.mod/v4/colfmt"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 )
 
@@ -50,11 +50,11 @@ func (prog Prog) reportResults(p1, p2 *Player) {
 	cols := make([]*col.Col, 0, prog.choiceCount()*perChoiceCols)
 	for i := 0; i < len(p1.choices); i++ {
 		cols = append(cols,
-			col.New(colfmt.String{W: prog.coinCount}, "chc"))
+			col.New(colfmt.String{W: 3}, "chc"))
 		if prog.showWinCount {
 			maxWinWidth := mathutil.Digits[int](prog.trials)
 			cols = append(cols,
-				col.New(colfmt.Int{W: maxWinWidth}, "wins"))
+				col.New(colfmt.Int{W: uint(maxWinWidth)}, "wins"))
 		}
 		if prog.showRunInfo {
 			cols = append(cols,
@@ -71,7 +71,7 @@ func (prog Prog) reportResults(p1, p2 *Player) {
 		}
 	}
 	hdr := col.NewHeaderOrPanic()
-	rpt := col.NewReport(hdr,
+	rpt := col.NewReportOrPanic(hdr,
 		os.Stdout,
 		col.New(colfmt.String{}, "player").SetSep(": "),
 		cols...)

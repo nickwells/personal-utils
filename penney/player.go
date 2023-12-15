@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/nickwells/col.mod/v3/col"
+	"github.com/nickwells/col.mod/v4/col"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 )
 

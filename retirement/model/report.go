@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nickwells/col.mod/v3/col"
-	"github.com/nickwells/col.mod/v3/col/colfmt"
+	"github.com/nickwells/col.mod/v4/col"
+	"github.com/nickwells/col.mod/v4/colfmt"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -155,20 +155,12 @@ func (m M) ReportModelMetrics() {
 		return
 	}
 
-	h, err := col.NewHeader()
-	if err != nil {
-		fmt.Println("Error found while constructing the header for metrics:",
-			err)
-		os.Exit(1)
-	}
-
-	rpt := col.NewReport(h, os.Stdout,
-		col.New(colfmt.Int{W: 6}, "threads"),
+	rpt := col.StdRpt(col.New(colfmt.Int{W: 6}, "threads"),
 		col.New(colfmt.Int{W: 8}, "time taken (µs)", "overall"),
 	)
 
 	fmt.Println()
-	err = rpt.PrintRow(
+	err := rpt.PrintRow(
 		m.modelMetrics.threadCount,
 		m.modelMetrics.durCalcValues.D.Nanoseconds()/int64(time.Microsecond))
 	if err != nil {
