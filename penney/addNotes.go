@@ -18,6 +18,7 @@ func addNotes(_ *Prog) param.PSetOptFunc {
 				" taking note of the maximum runs for each choice as this"+
 				" gives you an idea of the maximum loss you can expect"+
 				" before the errect of the long-term odds takes over.")
+
 		return nil
 	}
 }

@@ -18,10 +18,16 @@ type Prog struct {
 
 // NewProg returns a new Prog instance with the default values set
 func NewProg() *Prog {
+	const (
+		dfltTrials    = 1000
+		dfltCoinCount = 3
+		dfltCopyCount = 2
+	)
+
 	return &Prog{
-		trials:             1000,
-		coinCount:          3,
-		copyCount:          2,
+		trials:             dfltTrials,
+		coinCount:          dfltCoinCount,
+		copyCount:          dfltCopyCount,
 		leadingPickupShift: 1,
 	}
 }
@@ -30,12 +36,13 @@ func NewProg() *Prog {
 // H's and T's
 func (prog Prog) uintToStr(v uint) string {
 	coins := [2]string{"H", "T"}
-
 	val := ""
+
 	for i := prog.coinCount - 1; i >= 0; i-- {
 		cIdx := (v & (1 << i)) >> i
 		val += coins[cIdx]
 	}
+
 	return val
 }
 
@@ -48,9 +55,11 @@ func (prog Prog) choiceCount() int {
 func (prog Prog) makeAllPossibleChoices() []uint {
 	limit := prog.choiceCount()
 	choices := make([]uint, 0, limit)
-	for i := 0; i < limit; i++ {
-		choices = append(choices, uint(i))
+
+	for i := range limit {
+		choices = append(choices, uint(i)) //nolint:gosec
 	}
+
 	return choices
 }
 
@@ -60,40 +69,49 @@ func (prog Prog) makeOtherChoices(choices []uint) []uint {
 	otherChoices := make([]uint, 0, len(choices))
 	shift := prog.coinCount - prog.copyCount
 	shiftMask := prog.makeShiftMask(shift)
+
 	for _, c := range choices {
 		oc := c >> shift
-		leadingBits := ((^c) & shiftMask) << uint(prog.leadingPickupShift)
+		leadingBits := ((^c) & shiftMask) << uint(prog.leadingPickupShift) //nolint:gosec
 		oc |= leadingBits
 		otherChoices = append(otherChoices, oc)
 	}
+
 	return otherChoices
 }
 
 // makeAllOtherChoices constructs the other (winning) choices given the choices
 // of the first player
 func (prog Prog) makeAllOtherChoices(choices []uint) [][]uint {
-	limit := uint(prog.choiceCount())
+	limit := uint(prog.choiceCount()) //nolint:gosec
 	allOtherChoices := make([][]uint, len(choices))
+
 	for i, c := range choices {
 		allOtherChoices[i] = make([]uint, len(choices)-1)
+
 		idx := 0
-		for j := uint(0); j < limit; j++ {
+
+		for j := range limit {
 			if j == c {
 				continue
 			}
+
 			allOtherChoices[i][idx] = j
+
 			idx++
 		}
 	}
+
 	return allOtherChoices
 }
 
 // makeBitMask returns a bit-mask covering all the bits in the value
 func (prog Prog) makeBitMask() uint {
 	var bm uint
-	for i := 0; i < prog.coinCount; i++ {
+	for range prog.coinCount {
 		bm = (bm << 1) | 1
 	}
+
 	return bm
 }
 
@@ -101,30 +119,37 @@ func (prog Prog) makeBitMask() uint {
 // value
 func (prog Prog) makeShiftMask(shift int) uint {
 	var bm uint
-	for i := 0; i < prog.coinCount; i++ {
+
+	for i := range prog.coinCount {
 		var nextBit uint = 1
+
 		if i >= shift {
 			nextBit = 0
 		}
+
 		bm = (bm << 1) | nextBit
 	}
-	return bm >> uint(prog.leadingPickupShift)
+
+	return bm >> uint(prog.leadingPickupShift) //nolint:gosec
 }
 
 // play runs the trials collecting the results in the players results fields
 func (prog Prog) play(p1, p2 *Player) {
 	flips := make([]int, len(p1.choices))
+
 	var match uint
+
 	mask := prog.makeBitMask()
 
-	for i := 0; i < prog.trials; i++ {
-		toss := uint(rand.Intn(2))
+	for range prog.trials {
+		toss := uint(rand.Intn(2)) //nolint:gosec,mnd
 		match <<= 1
 		match |= toss
 		match &= mask
 
 		for c, fc := range flips {
 			fc++
+
 			if fc >= int(prog.coinCount) {
 				if match == p1.choices[c] {
 					p1.r[c].notify(fc, p1.ID)
@@ -136,6 +161,7 @@ func (prog Prog) play(p1, p2 *Player) {
 					fc = 0
 				}
 			}
+
 			flips[c] = fc
 		}
 	}

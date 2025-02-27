@@ -37,18 +37,24 @@ func NewPlayer(id string, choices []uint) *Player {
 // reportResults reports each of the results
 func (p Player) reportResults(rpt *col.Report, prog Prog) {
 	vals := make([]any, 0, 1+prog.choiceCount()*3)
+
 	vals = append(vals, p.ID)
+
 	for i, r := range p.r {
 		r.notify(0, "")
+
 		vals = append(vals, prog.uintToStr(p.choices[i]))
+
 		if prog.showWinCount {
 			vals = append(vals, r.myWins)
 		}
 
 		percVal := float64(r.myWins) / float64(r.totalWins)
+
 		if prog.showRoughly {
 			percVal = mathutil.Roughly(percVal, 1)
 		}
+
 		vals = append(vals, percVal)
 
 		if prog.showRunInfo {
@@ -57,6 +63,7 @@ func (p Player) reportResults(rpt *col.Report, prog Prog) {
 				float64(r.totalRunLength)/float64(r.runCount))
 		}
 	}
+
 	err := rpt.PrintRow(vals...)
 	if err != nil {
 		fmt.Println("error printing report: ", err)

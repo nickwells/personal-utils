@@ -19,13 +19,16 @@ func main() {
 
 	if prog.tryAll {
 		allOtherChoices := prog.makeAllOtherChoices(p1.choices)
+
 		for i, c := range p1.choices {
 			dupChoice := make([]uint, len(p1.choices)-1)
 			for idx := range dupChoice {
 				dupChoice[idx] = c
 			}
+
 			p1rpt := NewPlayer(p1.ID, dupChoice)
 			p2 := NewPlayer("P2", allOtherChoices[i])
+
 			prog.play(p1rpt, p2)
 
 			prog.reportResults(p1rpt, p2)
@@ -39,42 +42,48 @@ func main() {
 }
 
 // reportResults reports the results for the two players
+//
+//nolint:mnd
 func (prog Prog) reportResults(p1, p2 *Player) {
 	perChoiceCols := 4
+
 	if prog.showWinCount {
 		perChoiceCols++
 	}
+
 	if prog.showRunInfo {
 		perChoiceCols += 2
 	}
+
 	cols := make([]*col.Col, 0, prog.choiceCount()*perChoiceCols)
-	for i := 0; i < len(p1.choices); i++ {
-		cols = append(cols,
-			col.New(colfmt.String{W: 3}, "chc"))
+
+	for range len(p1.choices) {
+		cols = append(cols, col.New(colfmt.String{W: 3}, "chc"))
+
 		if prog.showWinCount {
-			maxWinWidth := mathutil.Digits[int](prog.trials)
+			maxWinWidth := mathutil.Digits(prog.trials)
 			cols = append(cols,
-				col.New(colfmt.Int{W: uint(maxWinWidth)}, "wins"))
+				col.New(colfmt.Int{W: uint(maxWinWidth)}, "wins")) //nolint:gosec
 		}
+
 		if prog.showRunInfo {
-			cols = append(cols,
-				col.New(&colfmt.Percent{W: 6, Prec: 2}, "%age"))
-			cols = append(cols,
-				col.New(&colfmt.Int{W: 3}, "max", "run"))
-			cols = append(cols,
-				col.New(
-					&colfmt.Float{W: 5, Prec: 1},
-					"avg", "run").SetSep(" | "))
+			cols = append(cols, col.New(&colfmt.Percent{W: 6, Prec: 2}, "%age"))
+			cols = append(cols, col.New(&colfmt.Int{W: 3}, "max", "run"))
+			cols = append(cols, col.New(
+				&colfmt.Float{W: 5, Prec: 1},
+				"avg", "run").SetSep(" | "))
 		} else {
 			cols = append(cols,
 				col.New(&colfmt.Percent{W: 6, Prec: 2}, "%age").SetSep(" | "))
 		}
 	}
+
 	hdr := col.NewHeaderOrPanic()
 	rpt := col.NewReportOrPanic(hdr,
 		os.Stdout,
 		col.New(colfmt.String{}, "player").SetSep(": "),
 		cols...)
+
 	p1.reportResults(rpt, prog)
 	p2.reportResults(rpt, prog)
 }

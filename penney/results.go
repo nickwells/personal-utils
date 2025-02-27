@@ -26,6 +26,7 @@ func (r *Results) notify(flips int, winnerID string) {
 	if winnerID == r.ID {
 		r.myWins++
 		r.totalFlips += flips
+
 		if flips > r.maxFlips {
 			r.maxFlips = flips
 		}
@@ -35,10 +36,12 @@ func (r *Results) notify(flips int, winnerID string) {
 		if r.lastWinnerID == r.ID {
 			r.runCount++
 			r.totalRunLength += r.currentRunLength
+
 			if r.currentRunLength > r.maxRunLength {
 				r.maxRunLength = r.currentRunLength
 			}
 		}
+
 		r.currentRunLength = 0
 	}
 

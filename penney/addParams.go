@@ -9,38 +9,48 @@ import (
 // addParams adds the parameters for this program
 func addParams(prog *Prog) param.PSetOptFunc {
 	return func(ps *param.PSet) error {
+		const (
+			minTrials = 200
+			minCoins  = 3
+		)
+
 		ps.Add("trials",
 			psetter.Int[int]{
 				Value: &prog.trials,
 				Checks: []check.ValCk[int]{
-					check.ValGT[int](200),
+					check.ValGE(minTrials),
 				},
 			},
 			"how many coin tosses should be performed")
+
 		ps.Add("coins",
 			psetter.Int[int]{
 				Value: &prog.coinCount,
 				Checks: []check.ValCk[int]{
-					check.ValGT[int](2),
+					check.ValGE(minCoins),
 				},
 			},
 			"how many coins should be chosen")
+
 		ps.Add("try-all",
 			psetter.Bool{
 				Value: &prog.tryAll,
 			},
 			"player 2 tries all the possible alternatives")
+
 		ps.Add("show-win-count",
 			psetter.Bool{
 				Value: &prog.showWinCount,
 			},
 			"show the number of wins")
+
 		ps.Add("show-run-info",
 			psetter.Bool{
 				Value: &prog.showRunInfo,
 			},
 			"show the run information where a run is a"+
 				" sequence of wins by the same player")
+
 		ps.Add("show-rough-results",
 			psetter.Bool{
 				Value: &prog.showRoughly,
@@ -49,6 +59,7 @@ func addParams(prog *Prog) param.PSetOptFunc {
 				" within 1% of the actual figure (that's within 1/100 of"+
 				" the percentage value)",
 			param.AltNames("show-roughly"))
+
 		return nil
 	}
 }
