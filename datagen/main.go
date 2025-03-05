@@ -56,8 +56,8 @@ func main() {
 	)
 	creditDescGen := datagen.NewGen(datagen.GenSetValue("EMPLOYER"))
 
-	transIsBGC := datagen.NewValCk[string](check.ValEQ("BGC"), transTypeGen)
-	transIsNotBGC := datagen.NewValCk[string](
+	transIsBGC := datagen.NewValCk(check.ValEQ("BGC"), transTypeGen)
+	transIsNotBGC := datagen.NewValCk(
 		check.Not(check.ValEQ("BGC"), ""),
 		transTypeGen)
 
@@ -71,7 +71,7 @@ func main() {
 	moneySM := datagen.NewMoneyStringMaker(func(m datagen.Money) string {
 		return toStr(m.Amt)
 	})
-	setMoneySM := datagen.GenSetStringMaker[datagen.Money](moneySM)
+	setMoneySM := datagen.GenSetStringMaker(moneySM)
 
 	zeroMoney := datagen.Money{Ccy: gbp, Amt: 0}
 	zeroGen := datagen.NewGen(setMoneySM, datagen.GenSetValue(zeroMoney))
@@ -79,14 +79,14 @@ func main() {
 	salaryGen := datagen.NewGen(setMoneySM, datagen.GenSetValue(salary))
 	randMoneyGen := datagen.NewGen(setMoneySM,
 		datagen.GenSetValue(datagen.Money{Ccy: gbp, Amt: 2340}),
-		datagen.GenSetValSetter[datagen.Money](
+		datagen.GenSetValSetter(
 			datagen.NewMoneyValSetter(
 				datagen.NewNormValSetter[int64](150, 50000, 6000, 3000))))
 
-	debitGen := datagen.NewSwitchGen[datagen.Money](zeroGen,
-		datagen.NewCase[datagen.Money](transIsNotBGC, randMoneyGen))
-	creditGen := datagen.NewSwitchGen[datagen.Money](zeroGen,
-		datagen.NewCase[datagen.Money](transIsBGC, salaryGen))
+	debitGen := datagen.NewSwitchGen(zeroGen,
+		datagen.NewCase(transIsNotBGC, randMoneyGen))
+	creditGen := datagen.NewSwitchGen(zeroGen,
+		datagen.NewCase(transIsBGC, salaryGen))
 	aggregator := func(v *datagen.Money,
 		vals ...datagen.TypedGenerator[datagen.Money],
 	) {
@@ -94,8 +94,8 @@ func main() {
 	}
 	balanceGen := datagen.NewGen(setMoneySM,
 		datagen.GenSetValue(datagen.Money{Ccy: gbp, Amt: 132045}),
-		datagen.GenSetValSetter[datagen.Money](
-			datagen.NewComputedValSetter[datagen.Money](
+		datagen.GenSetValSetter(
+			datagen.NewComputedValSetter(
 				aggregator, debitGen, creditGen)))
 
 	r := datagen.NewRecord("",
@@ -107,9 +107,9 @@ func main() {
 		datagen.NewField("Sort Code", sortCodeGen),
 		datagen.NewField("Account Number", acctNumGen),
 		datagen.NewField("Transaction Description",
-			datagen.NewSwitchGen[string](
+			datagen.NewSwitchGen(
 				debitDescGen,
-				datagen.NewCase[string](transIsBGC, creditDescGen))),
+				datagen.NewCase(transIsBGC, creditDescGen))),
 		datagen.NewField("Debit Amount", debitGen),
 		datagen.NewField("Credit Amount", creditGen),
 		datagen.NewField("Balance", balanceGen),
