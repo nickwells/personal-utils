@@ -5,7 +5,7 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
+	"math/rand/v2"
 )
 
 // Created: Mon May  3 19:31:12 2021
@@ -16,8 +16,8 @@ const (
 )
 
 type Prog struct {
-	trials     int64
-	doorCount  int64
+	trials     int
+	doorCount  int
 	changeDoor bool
 	wins       int
 }
@@ -48,8 +48,8 @@ func main() {
 // runTrial runs a single trial incrementing the win count if the player
 // strategy would have won
 func (prog *Prog) runTrial() {
-	prizeDoor := rand.Intn(int(prog.doorCount))
-	chosenDoor := rand.Intn(int(prog.doorCount))
+	prizeDoor := rand.IntN(prog.doorCount)
+	chosenDoor := rand.IntN(prog.doorCount)
 
 	if chosenDoor == prizeDoor { // if we had chosen the right door ...
 		if !prog.changeDoor { // ... and we don't change door

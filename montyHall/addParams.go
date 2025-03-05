@@ -8,12 +8,12 @@ import (
 func addParams(prog *Prog) param.PSetOptFunc {
 	return func(ps *param.PSet) error {
 		ps.Add("trials",
-			psetter.Int[int64]{Value: &prog.trials},
+			psetter.Int[int]{Value: &prog.trials},
 			"the number of trials to perform",
 		)
 
 		ps.Add("doors",
-			psetter.Int[int64]{Value: &prog.doorCount},
+			psetter.Int[int]{Value: &prog.doorCount},
 			"the number of doors",
 		)
 
