@@ -123,8 +123,13 @@ func (s *Summaries) populateParents(prog *Prog) {
 		if line == "" {
 			continue
 		}
-		parts := strings.SplitN(line, " ", 2)
-		err = s.addParent(parts[0], parts[1])
+		from, to, ok := strings.Cut(line, " ")
+		if !ok {
+			fmt.Printf("%s:%d: Bad entry in the %s: there is no 'to' part\n",
+				prog.xactMapFileName, lineNum, xactnMapDesc)
+		}
+
+		err = s.addParent(from, to)
 		if err != nil {
 			fmt.Printf("%s:%d: Bad entry in the %s: %s\n",
 				prog.xactMapFileName, lineNum, xactnMapDesc, err)
@@ -153,14 +158,13 @@ func (s *Summaries) populateEdits(prog *Prog) {
 		if line == "" {
 			continue
 		}
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) != 2 {
-			fmt.Printf("%s:%d: %s: Missing '=' : %s\n",
+		entryType, entryValue, ok := strings.Cut(line, "=")
+		if !ok {
+			fmt.Printf("%s:%d: Bad entry in the %s: missing '=': %s\n",
 				prog.editFileName, lineNum, errIntro, line)
 			errFound = true
 			continue
 		}
-		entryType := parts[0]
 		switch entryType {
 		case editTypeSearch:
 			if prevType == editTypeSearch {
@@ -169,7 +173,7 @@ func (s *Summaries) populateEdits(prog *Prog) {
 					prog.editFileName, lineNum, errIntro, editTypeReplace)
 			}
 			errFound = false
-			searchStr = parts[1]
+			searchStr = entryValue
 			searchRE, err = regexp.Compile(searchStr)
 			if err != nil {
 				fmt.Printf("%s:%d: %s: Couldn't compile the regexp: %s\n",
@@ -181,7 +185,7 @@ func (s *Summaries) populateEdits(prog *Prog) {
 				s.edits = append(s.edits, Edit{
 					search:      searchStr,
 					searchRE:    searchRE,
-					replacement: parts[1],
+					replacement: entryValue,
 				})
 			}
 		default:
