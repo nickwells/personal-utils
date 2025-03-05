@@ -31,3 +31,11 @@ go build -ldflags="$(goBuildLdflags)"
 ## penney
 
 [See here](penney/_penney.DOC.md)
+
+## rotnCalc
+
+[See here](rotnCalc/_rotnCalc.DOC.md)
+
+## bloodMoon
+
+[See here](bloodMoon/_bloodMoon.DOC.md)

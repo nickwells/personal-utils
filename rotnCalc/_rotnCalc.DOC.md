@@ -1,8 +1,5 @@
 <!-- Created by mkdoc DO NOT EDIT. -->
 
-<!-- The contents of this file will be inserted into the generated -->
-<!-- Markdown documentation at the front by the mkdoc command. -->
-<!-- TODO: add any extra documentation -->
 # rotnCalc
 
 This will calculate various components of the equation a=r\*w^2
@@ -36,6 +33,7 @@ for the program from the command line.
 
 This offers version-querying parameters that allow the user to discover the
 program version.
-<!-- The contents of this file will be inserted into the generated -->
-<!-- Markdown documentation at the back by the mkdoc command. -->
-<!-- TODO: add any extra documentation -->
+
+
+## Notes
+For additional notes [see here](_rotnCalc.NOTES.md)
