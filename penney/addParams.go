@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/psetter"
@@ -32,6 +34,16 @@ func addParams(prog *Prog) param.PSetOptFunc {
 			},
 			"how many coins should be chosen")
 
+		copyCountParam := ps.Add("copy-count",
+			psetter.Int[int]{
+				Value: &prog.copyCount,
+				Checks: []check.ValCk[int]{
+					check.ValGE(0),
+				},
+			},
+			"how many coins should be copied when generating player"+
+				" number two's coin sequence")
+
 		ps.Add("try-all",
 			psetter.Bool{
 				Value: &prog.tryAll,
@@ -59,6 +71,22 @@ func addParams(prog *Prog) param.PSetOptFunc {
 				" within 1% of the actual figure (that's within 1/100 of"+
 				" the percentage value)",
 			param.AltNames("show-roughly"))
+
+		ps.AddFinalCheck(func() error {
+			if prog.copyCount >= prog.coinCount {
+				return fmt.Errorf("The copy count (%d) must be less than"+
+					" the number of coins (%d)",
+					prog.copyCount, prog.coinCount)
+			}
+			return nil
+		})
+
+		ps.AddFinalCheck(func() error {
+			if !copyCountParam.HasBeenSet() {
+				prog.copyCount = prog.coinCount - 1
+			}
+			return nil
+		})
 
 		return nil
 	}
