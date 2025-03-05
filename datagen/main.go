@@ -116,7 +116,8 @@ func main() {
 	)
 
 	fmt.Println(strings.Join(r.GenerateTitles(), ","))
-	for i := int64(0); i < prog.count; i++ {
+
+	for range prog.count {
 		fmt.Println(strings.Join(r.Generate(), ","))
 		r.Next()
 	}

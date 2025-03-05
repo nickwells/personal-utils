@@ -35,7 +35,7 @@ func main() {
 	ps := makeParamSet(prog)
 	ps.Parse()
 
-	for i := int64(0); i < prog.trials; i++ {
+	for range prog.trials {
 		prog.runTrial()
 	}
 
