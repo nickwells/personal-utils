@@ -7,6 +7,7 @@ import (
 
 	"github.com/nickwells/col.mod/v4/col"
 	"github.com/nickwells/col.mod/v4/colfmt"
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -149,11 +150,13 @@ func (m M) reportModelParams() {
 
 	fmt.Println()
 	err := rpt.PrintRow(
-		m.inflationPct/100,
+		mathutil.FromPercent(m.inflationPct),
 		m.initialPortfolio,
-		m.rtnMeanPct/100, m.rtnSDPct/100, m.minGrowthPct/100,
+		mathutil.FromPercent(m.rtnMeanPct),
+		mathutil.FromPercent(m.rtnSDPct),
+		mathutil.FromPercent(m.minGrowthPct),
 		m.targetIncome, m.minIncome, m.drawingPeriodsPerYear, m.yearsDefered,
-		m.crashInterval, m.crashPct/100,
+		m.crashInterval, mathutil.FromPercent(m.crashPct),
 		m.years, m.trials, m.yearsToShow, m.extremeSetSize)
 	if err != nil {
 		fmt.Println("Couldn't print the model parameters:", err)

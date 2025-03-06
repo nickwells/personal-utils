@@ -6,6 +6,8 @@ import (
 	"math/rand/v2"
 	"runtime"
 	"time"
+
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
 )
 
 type timer struct {
@@ -276,18 +278,18 @@ func (s *state) setState(m *M) {
 	s.initialPortfolio = m.initialPortfolio
 	s.bust = false
 
-	s.currentRtn = m.rtnMeanPct / 100
-	s.rtnMean = m.rtnMeanPct / 100
-	s.rtnSD = m.rtnSDPct / 100
-	s.minGrowth = (m.inflationPct + m.minGrowthPct) / 100
-	s.crashProp = m.crashPct / 100
+	s.currentRtn = mathutil.FromPercent(m.rtnMeanPct)
+	s.rtnMean = mathutil.FromPercent(m.rtnMeanPct)
+	s.rtnSD = mathutil.FromPercent(m.rtnSDPct)
+	s.minGrowth = mathutil.FromPercent(m.inflationPct + m.minGrowthPct)
+	s.crashProp = mathutil.FromPercent(m.crashPct)
 
 	s.currentIncome = m.targetIncome
 	s.targetIncome = m.targetIncome
 	s.minIncome = m.minIncome
 
 	s.inflationAdjustment = 1
-	s.yearlyInflation = 1 + (m.inflationPct / 100)
+	s.yearlyInflation = 1 + (mathutil.FromPercent(m.inflationPct))
 }
 
 // calcCurrentIncome sets the income to be taken in the forthcoming year. It
