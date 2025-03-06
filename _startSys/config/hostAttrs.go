@@ -42,7 +42,7 @@ func (sc *SysConfig) checkAttrs(hd *HostDetails) {
 	for attr, tmplt := range sc.hostAttrTemplates {
 		if tmplt.Min > 0 && !hasAttr[attr] {
 			if tmplt.HasDefault {
-				for i := 0; i < tmplt.Min; i++ {
+				for range tmplt.Min {
 					hostAttrs[attr] = append(hostAttrs[attr], tmplt.DefaultVal)
 				}
 			} else {

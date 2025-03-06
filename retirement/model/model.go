@@ -130,7 +130,7 @@ func (m *M) trialRunner(trials int64, rc chan<- []*AggResults, tc chan bool) {
 			uint64(time.Now().Unix())))      //nolint:gosec
 	for ; trials > 0; trials-- {
 		s.setState(m)
-		for y := int64(0); y < m.years; y++ {
+		for y := range m.years {
 			r := results[y]
 
 			s.year = y
@@ -185,7 +185,7 @@ func (m *M) CalcValues() []*AggResults {
 
 	go m.mergeResults(results, resultsChan, resultsGathered)
 
-	for i := int64(0); i < poolSize-1; i++ {
+	for range poolSize - 1 {
 		go m.trialRunner(trialsPerRunner, resultsChan, trialsComplete)
 	}
 	go m.trialRunner(m.trials-(poolSize-1)*trialsPerRunner,
@@ -350,7 +350,7 @@ func (s *state) calcNewPortfolio(r *AggResults) {
 		periodIncome = 0
 	}
 
-	for i := 0; i < int(s.model.drawingPeriodsPerYear); i++ {
+	for range s.model.drawingPeriodsPerYear {
 		s.portfolio -= periodIncome
 		if s.portfolio < 0 {
 			s.portfolio = 0
