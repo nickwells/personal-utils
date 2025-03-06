@@ -24,9 +24,11 @@ func NewStat(size int) (*Stat, error) {
 				"the capacity of the min and max slices must be >= 1 (is %d)",
 				size)
 	}
+
 	s := &Stat{}
 	s.mins = make([]float64, 0, size)
 	s.maxs = make([]float64, 0, size)
+
 	return s, nil
 }
 
@@ -37,6 +39,7 @@ func NewStatOrPanic(size int) *Stat {
 	if err != nil {
 		panic(err)
 	}
+
 	return s
 }
 
@@ -51,9 +54,10 @@ const (
 func (s *Stat) addVal(val float64) {
 	maxIdx := cap(s.mins) - 1
 
-	s.count++
 	s.sum += val
 	s.sumSq += (val * val)
+
+	s.count++
 	if s.count <= cap(s.mins) {
 		s.mins = append(s.mins, val)
 		s.maxs = append(s.maxs, val)
@@ -63,6 +67,7 @@ func (s *Stat) addVal(val float64) {
 		if val < s.mins[maxIdx] { // smaller than the largest min value
 			insert(val, s.mins, DropFromEnd)
 		}
+
 		if val > s.maxs[0] { // larger than the smallest max value
 			insert(val, s.maxs, DropFromStart)
 		}
@@ -74,6 +79,7 @@ func (s *Stat) addVal(val float64) {
 // type. The vals slice is assumed to be sorted in ascending order.
 func insert(val float64, vals []float64, discard discardType) {
 	var i int
+
 	var cmp float64
 
 	for i, cmp = range vals {
@@ -91,6 +97,7 @@ func insert(val float64, vals []float64, discard discardType) {
 			copy(vals[:i], vals[1:i+1])
 		}
 	}
+
 	vals[i] = val
 }
 
@@ -101,23 +108,19 @@ func merge(s1, s2 []float64) []float64 {
 	agg = append(agg, s1...)
 	agg = append(agg, s2...)
 	sort.Float64s(agg)
+
 	return agg
 }
 
 // mergeVal combines the stats
 func (s *Stat) mergeVal(s2 *Stat) {
 	aggMins := merge(s.mins, s2.mins)
-	end := cap(s.mins)
-	if end > len(aggMins) {
-		end = len(aggMins)
-	}
-	s.mins = append(s.mins[:0], aggMins[0:end]...)
-
 	aggMaxs := merge(s.maxs, s2.maxs)
-	start := len(aggMaxs) - cap(s.maxs)
-	if start < 0 {
-		start = 0
-	}
+
+	end := min(len(aggMins), cap(s.mins))
+	start := max(0, len(aggMaxs)-cap(s.maxs))
+
+	s.mins = append(s.mins[:0], aggMins[0:end]...)
 	s.maxs = append(s.maxs[:0], aggMaxs[start:]...)
 
 	s.count += s2.count
@@ -129,9 +132,11 @@ func (s *Stat) mergeVal(s2 *Stat) {
 // which must not be empty
 func calcMean(s []float64) float64 {
 	var sum float64
+
 	for _, v := range s {
 		sum += v
 	}
+
 	return sum / float64(len(s))
 }
 
@@ -140,13 +145,17 @@ func (s Stat) vals() (minimum, avg, sd, maximum float64, count int) {
 	if s.count == 0 {
 		return
 	}
+
 	minimum = calcMean(s.mins)
 	avg = s.sum / float64(s.count)
 	sd = 0
+
 	if s.count > 1 {
 		sd = math.Sqrt((s.sumSq / float64(s.count-1)) - (avg * avg))
 	}
+
 	maximum = calcMean(s.maxs)
 	count = s.count
+
 	return
 }

@@ -78,6 +78,7 @@ func addParams(prog *Prog) param.PSetOptFunc {
 					" the number of coins (%d)",
 					prog.copyCount, prog.coinCount)
 			}
+
 			return nil
 		})
 
@@ -85,6 +86,7 @@ func addParams(prog *Prog) param.PSetOptFunc {
 			if !copyCountParam.HasBeenSet() {
 				prog.copyCount = prog.coinCount - 1
 			}
+
 			return nil
 		})
 

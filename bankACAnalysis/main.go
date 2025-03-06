@@ -95,16 +95,19 @@ func openFileOrDie(fileName, desc string) *os.File {
 // transaction map file
 func (s *Summaries) populateParents(prog *Prog) {
 	s.parentOf[catAll] = catAll
+
 	err := s.addParent(catAll, catUnknown)
 	if err != nil {
 		fmt.Printf("Cannot initialise the %s: %s\n", xactnMapDesc, err)
 		os.Exit(1)
 	}
+
 	err = s.addParent(catAll, catCash)
 	if err != nil {
 		fmt.Printf("Cannot initialise the %s: %s\n", xactnMapDesc, err)
 		os.Exit(1)
 	}
+
 	err = s.addParent(catAll, catCheque)
 	if err != nil {
 		fmt.Printf("Cannot initialise the %s: %s\n", xactnMapDesc, err)
@@ -119,10 +122,12 @@ func (s *Summaries) populateParents(prog *Prog) {
 
 	for mScanner.Scan() {
 		lineNum++
+
 		line := mScanner.Text()
 		if line == "" {
 			continue
 		}
+
 		from, to, ok := strings.Cut(line, " ")
 		if !ok {
 			fmt.Printf("%s:%d: Bad entry in the %s: there is no 'to' part\n",
@@ -146,25 +151,35 @@ func (s *Summaries) populateEdits(prog *Prog) {
 	eScanner := bufio.NewScanner(ef)
 	lineNum := 0
 	prevType := ""
+
 	var searchRE *regexp.Regexp
+
 	var searchStr string
+
 	var errFound bool
+
 	var err error
+
 	const errIntro = "Bad transaction edits entry"
 
 	for eScanner.Scan() {
 		lineNum++
+
 		line := eScanner.Text()
 		if line == "" {
 			continue
 		}
+
 		entryType, entryValue, ok := strings.Cut(line, "=")
 		if !ok {
 			fmt.Printf("%s:%d: Bad entry in the %s: missing '=': %s\n",
 				prog.editFileName, lineNum, errIntro, line)
+
 			errFound = true
+
 			continue
 		}
+
 		switch entryType {
 		case editTypeSearch:
 			if prevType == editTypeSearch {
@@ -191,8 +206,10 @@ func (s *Summaries) populateEdits(prog *Prog) {
 		default:
 			fmt.Printf("%s:%d: %s: Bad type: %s\n",
 				prog.editFileName, lineNum, errIntro, entryType)
+
 			errFound = true
 		}
+
 		prevType = entryType
 	}
 }
@@ -247,12 +264,14 @@ func (s *Summaries) addParent(parent, child string) error {
 	if cSum.depth > s.maxDepth {
 		s.maxDepth = cSum.depth
 	}
+
 	if uint(len(cSum.name)) > s.maxNameWidth {
 		s.maxNameWidth = uint(len(cSum.name))
 	}
 
 	pSum.components[child] = cSum
 	s.parentOf[child] = parent
+
 	return nil
 }
 
@@ -264,6 +283,7 @@ func (s *Summaries) summarise(xa Xactn) {
 		fmt.Println("Couldn't find the summary record for :", xa)
 		return
 	}
+
 	summ.add(xa)
 }
 
@@ -340,6 +360,7 @@ func main() {
 	for _, cat := range prog.showCats {
 		fmt.Print(sep)
 		sep = "\n"
+
 		summaries.report(prog, cat)
 	}
 }
@@ -369,7 +390,9 @@ func (prog *Prog) checkFiles() {
 	}
 
 	m := map[string]bool{}
+
 	var dupFound int
+
 	for _, f := range prog.files {
 		if m[f] {
 			fmt.Println("File name", f,
@@ -378,6 +401,7 @@ func (prog *Prog) checkFiles() {
 		}
 		m[f] = true
 	}
+
 	if dupFound > 0 {
 		os.Exit(1)
 	}
@@ -387,11 +411,13 @@ func (prog *Prog) checkFiles() {
 // io.Reader
 func (s *Summaries) populateSummaries(prog *Prog, name string, r *csv.Reader) {
 	lineNum := 0
+
 	for {
 		parts, err := r.Read()
 		if err == io.EOF {
 			break
 		}
+
 		if err != nil {
 			fmt.Println("Error found while reading:", name)
 			fmt.Println(err)
@@ -402,11 +428,13 @@ func (s *Summaries) populateSummaries(prog *Prog, name string, r *csv.Reader) {
 		if prog.skipFirstLine && lineNum == 1 {
 			continue // ignore the first line of headings
 		}
+
 		xa, err := s.mkXactn(lineNum, parts)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
+
 		s.createNewMapEntries(name, lineNum, xa)
 		s.summarise(xa)
 	}
@@ -462,11 +490,13 @@ func (s *Summaries) report(prog *Prog, cat string) {
 		pctColWidth   = 5
 		countColWidth = 5
 	)
+
 	summ, ok := s.summaries[cat]
 	if !ok {
 		fmt.Printf("*** category: %q is not recognised\n", cat)
 		return
 	}
+
 	floatCol := colfmt.Float{
 		W:    floatColWidth,
 		Prec: floatColPrec,
@@ -519,9 +549,11 @@ func (s *Summary) report(
 	if prog.style == summaryReport && len(s.components) == 0 {
 		return
 	}
+
 	if !prog.showZeros && s.count == 0 {
 		return
 	}
+
 	if s.creditAmt+s.debitAmt < prog.minimalAmount {
 		return
 	}
@@ -541,10 +573,12 @@ func (s *Summary) report(
 	for _, c := range s.components {
 		compList = append(compList, c)
 	}
+
 	sort.Slice(compList, func(i, j int) bool {
 		return (compList[i].debitAmt + compList[i].creditAmt) >
 			(compList[j].debitAmt + compList[j].creditAmt)
 	})
+
 	for _, c := range compList {
 		c.report(prog, rpt, totDebit, totCredit, indent+1)
 	}

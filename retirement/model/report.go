@@ -68,14 +68,18 @@ func (m M) Report(results []*AggResults) {
 	if m.showIntroText {
 		m.printIntroText()
 	}
+
 	if m.showModelParams {
 		m.reportModelParams()
 	}
 
 	fmt.Println()
+
 	rpt := makeRpt()
 	lastPfl := m.initialPortfolio
+
 	var vals []any
+
 	for i, r := range results {
 		vals, lastPfl = colVals(m, lastPfl, r)
 		if i%int(m.yearsToShow) == 0 || i == len(results)-1 {
@@ -149,6 +153,7 @@ func (m M) reportModelParams() {
 	)
 
 	fmt.Println()
+
 	err := rpt.PrintRow(
 		mathutil.FromPercent(m.inflationPct),
 		m.initialPortfolio,
@@ -164,6 +169,8 @@ func (m M) reportModelParams() {
 }
 
 // ReportModelMetrics reports the metrics on the model performance
+//
+//nolint:mnd
 func (m M) ReportModelMetrics() {
 	if !m.showModelMetrics {
 		return
@@ -174,6 +181,7 @@ func (m M) ReportModelMetrics() {
 	)
 
 	fmt.Println()
+
 	err := rpt.PrintRow(
 		m.modelMetrics.threadCount,
 		m.modelMetrics.durCalcValues.D.Nanoseconds()/int64(time.Microsecond))

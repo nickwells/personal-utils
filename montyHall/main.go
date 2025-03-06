@@ -47,6 +47,8 @@ func main() {
 
 // runTrial runs a single trial incrementing the win count if the player
 // strategy would have won
+//
+//nolint:gosec
 func (prog *Prog) runTrial() {
 	prizeDoor := rand.IntN(prog.doorCount)
 	chosenDoor := rand.IntN(prog.doorCount)

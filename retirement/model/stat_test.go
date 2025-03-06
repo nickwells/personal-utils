@@ -89,6 +89,7 @@ func TestInsert(t *testing.T) {
 
 	for _, tc := range testCases {
 		insert(tc.val, tc.valSlc, tc.discard)
+
 		if differs(tc.valSlc, tc.expResult) {
 			t.Log(tc.IDStr())
 			t.Log("\t: Expected:", tc.expResult)
@@ -158,18 +159,23 @@ func statDiffers(s1, s2 Stat) bool {
 	if s1.count != s2.count {
 		return true
 	}
+
 	if s1.sum != s2.sum {
 		return true
 	}
+
 	if s1.sumSq != s2.sumSq {
 		return true
 	}
+
 	if differs(s1.mins, s2.mins) {
 		return true
 	}
+
 	if differs(s1.maxs, s2.maxs) {
 		return true
 	}
+
 	return false
 }
 
@@ -211,6 +217,7 @@ func TestAddVal(t *testing.T) {
 		for _, v := range tc.vals {
 			s.addVal(v)
 		}
+
 		if statDiffers(*s, tc.expStat) {
 			t.Log(tc.IDStr())
 			t.Errorf("\t: addVal failed\n")
@@ -274,6 +281,7 @@ func TestMergeVal(t *testing.T) {
 
 	for _, tc := range testCases {
 		tc.s1.mergeVal(&tc.s2)
+
 		if statDiffers(tc.s1, tc.expVal) {
 			t.Log(tc.IDStr())
 			t.Errorf("\t: mergeVal failed\n")

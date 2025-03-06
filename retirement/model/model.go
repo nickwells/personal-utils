@@ -22,6 +22,7 @@ type timer struct {
 //	defer t.TimeIt()()
 func (t *timer) TimeIt() func() {
 	t.start = time.Now()
+
 	return func() {
 		t.D = time.Since(t.start)
 	}
@@ -86,10 +87,12 @@ func (m M) initResults() []*AggResults {
 	results := make([]*AggResults, m.years)
 	for y := range results {
 		r := NewAggResultsOrPanic(int(m.extremeSetSize))
+
 		r.year = int64(y)
 		if r.year < m.yearsDefered {
 			r.withdrawalDefered = true
 		}
+
 		results[y] = r
 	}
 
@@ -128,8 +131,10 @@ func (m *M) trialRunner(trials int64, rc chan<- []*AggResults, tc chan bool) {
 		rand.NewPCG(
 			uint64(time.Now().Nanosecond()), //nolint:gosec
 			uint64(time.Now().Unix())))      //nolint:gosec
-	for ; trials > 0; trials-- {
+
+	for range trials {
 		s.setState(m)
+
 		for y := range m.years {
 			r := results[y]
 
@@ -137,12 +142,15 @@ func (m *M) trialRunner(trials int64, rc chan<- []*AggResults, tc chan bool) {
 			s.calcCurrentRtn(r)
 			s.calcCurrentIncome(r)
 			s.calcNewPortfolio(r)
+
 			if s.portfolio <= 0 {
 				s.bust = true
+
 				for ; y < m.years; y++ {
 					r := results[y]
 					r.bust++
 				}
+
 				break
 			}
 
@@ -188,6 +196,7 @@ func (m *M) CalcValues() []*AggResults {
 	for range poolSize - 1 {
 		go m.trialRunner(trialsPerRunner, resultsChan, trialsComplete)
 	}
+
 	go m.trialRunner(m.trials-(poolSize-1)*trialsPerRunner,
 		resultsChan, trialsComplete)
 
@@ -227,10 +236,12 @@ func NewAggResults(size int) (*AggResults, error) {
 				"the size to be used for the Stat members must be >= 1 (is %d)",
 				size)
 	}
+
 	ar := &AggResults{
 		portfolio: NewStatOrPanic(size),
 		income:    NewStatOrPanic(size),
 	}
+
 	return ar, nil
 }
 
@@ -241,6 +252,7 @@ func NewAggResultsOrPanic(size int) *AggResults {
 	if err != nil {
 		panic(err)
 	}
+
 	return ar
 }
 
@@ -346,6 +358,7 @@ func (s *state) calcNewPortfolio(r *AggResults) {
 	ppy := float64(s.model.drawingPeriodsPerYear)
 	periodMult := math.Pow(1+s.currentRtn, 1.0/ppy)
 	periodIncome := s.currentIncome / ppy
+
 	if s.model.yearsDefered > s.year {
 		periodIncome = 0
 	}
@@ -356,6 +369,7 @@ func (s *state) calcNewPortfolio(r *AggResults) {
 			s.portfolio = 0
 			break
 		}
+
 		s.portfolio *= periodMult
 	}
 
