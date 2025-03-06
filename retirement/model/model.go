@@ -3,7 +3,7 @@ package model
 import (
 	"fmt"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"runtime"
 	"time"
 )
@@ -122,7 +122,10 @@ func (m *M) trialRunner(trials int64, rc chan<- []*AggResults, tc chan bool) {
 	results := m.initResults()
 
 	s := new(state)
-	s.rand = rand.New(rand.NewSource(int64(time.Now().Nanosecond())))
+	s.rand = rand.New( //nolint:gosec
+		rand.NewPCG(
+			uint64(time.Now().Nanosecond()), //nolint:gosec
+			uint64(time.Now().Unix())))      //nolint:gosec
 	for ; trials > 0; trials-- {
 		s.setState(m)
 		for y := int64(0); y < m.years; y++ {
