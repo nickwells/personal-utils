@@ -88,6 +88,7 @@ func openFileOrDie(fileName, desc string) *os.File {
 		fmt.Printf("Couldn't open the %s file: %s", desc, err)
 		os.Exit(1)
 	}
+
 	return f
 }
 
@@ -187,12 +188,15 @@ func (s *Summaries) populateEdits(prog *Prog) {
 					"%s:%d: %s: %q entry missing for previous search\n",
 					prog.editFileName, lineNum, errIntro, editTypeReplace)
 			}
+
 			errFound = false
 			searchStr = entryValue
+
 			searchRE, err = regexp.Compile(searchStr)
 			if err != nil {
 				fmt.Printf("%s:%d: %s: Couldn't compile the regexp: %s\n",
 					prog.editFileName, lineNum, errIntro, err)
+
 				errFound = true
 			}
 		case editTypeReplace:
@@ -245,6 +249,7 @@ func (s *Summaries) addParent(parent, child string) error {
 			return fmt.Errorf("%q already has a parent: %q != %q",
 				child, parent, oldParent)
 		}
+
 		return nil
 	}
 
@@ -254,6 +259,7 @@ func (s *Summaries) addParent(parent, child string) error {
 			" - check the transaction map file",
 			parent, child)
 	}
+
 	cSum := &Summary{
 		name:       child,
 		parent:     pSum,
@@ -261,6 +267,7 @@ func (s *Summaries) addParent(parent, child string) error {
 		components: make(map[string]*Summary),
 	}
 	s.summaries[child] = cSum
+
 	if cSum.depth > s.maxDepth {
 		s.maxDepth = cSum.depth
 	}
@@ -300,9 +307,11 @@ func (s *Summary) add(xa Xactn) {
 			s.firstDate = xa.date
 		}
 	}
+
 	s.count++
 	s.debitAmt += xa.debitAmt
 	s.creditAmt += xa.creditAmt
+
 	if s.parent != nil {
 		s.parent.add(xa)
 	}
@@ -354,6 +363,7 @@ func main() {
 	if prog.acFileName != "" {
 		prog.files = append(prog.files, prog.acFileName)
 	}
+
 	summaries := prog.getAccountData()
 
 	sep := ""
@@ -378,6 +388,7 @@ func (prog *Prog) getAccountData() *Summaries {
 		s.populateSummaries(prog, name, r)
 		f.Close()
 	}
+
 	return s
 }
 
@@ -397,8 +408,10 @@ func (prog *Prog) checkFiles() {
 		if m[f] {
 			fmt.Println("File name", f,
 				"appears more than once in the list of files")
+
 			dupFound++
 		}
+
 		m[f] = true
 	}
 
@@ -479,6 +492,7 @@ func (s *Summaries) normalise(str string) string {
 	for _, ed := range s.edits {
 		str = ed.searchRE.ReplaceAllLiteralString(str, ed.replacement)
 	}
+
 	return str
 }
 
@@ -537,6 +551,7 @@ func calcPct(amt, tot float64) float64 {
 	if tot == 0 {
 		return 0
 	}
+
 	return amt / tot
 }
 
@@ -590,10 +605,12 @@ func parseNum(s, name string) (float64, error) {
 	if s == "" {
 		return 0.0, nil
 	}
+
 	n, err := strconv.ParseFloat(s, 64)
 	if err != nil {
 		return 0.0, fmt.Errorf("Couldn't parse the %s: %s", name, err)
 	}
+
 	return n, nil
 }
 
