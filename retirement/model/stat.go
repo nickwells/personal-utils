@@ -136,17 +136,17 @@ func calcMean(s []float64) float64 {
 }
 
 // vals returns the calculated values from the stat
-func (s Stat) vals() (min, avg, sd, max float64, count int) {
+func (s Stat) vals() (minimum, avg, sd, maximum float64, count int) {
 	if s.count == 0 {
 		return
 	}
-	min = calcMean(s.mins)
+	minimum = calcMean(s.mins)
 	avg = s.sum / float64(s.count)
 	sd = 0
 	if s.count > 1 {
 		sd = math.Sqrt((s.sumSq / float64(s.count-1)) - (avg * avg))
 	}
-	max = calcMean(s.maxs)
+	maximum = calcMean(s.maxs)
 	count = s.count
 	return
 }
