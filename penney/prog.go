@@ -1,7 +1,7 @@
 package main
 
 import (
-	"math/rand"
+	"math/rand/v2"
 )
 
 // Prog holds program parameters and status
@@ -68,7 +68,7 @@ func (prog Prog) makeAllPossibleChoices() []uint {
 func (prog Prog) makeOtherChoices(choices []uint) []uint {
 	otherChoices := make([]uint, 0, len(choices))
 	shift := prog.coinCount - prog.copyCount
-	shiftMask := prog.makeShiftMask(shift)
+	shiftMask := makeShiftMask(prog.coinCount, shift, prog.leadingPickupShift)
 
 	for _, c := range choices {
 		oc := c >> shift
@@ -105,10 +105,10 @@ func (prog Prog) makeAllOtherChoices(choices []uint) [][]uint {
 	return allOtherChoices
 }
 
-// makeBitMask returns a bit-mask covering all the bits in the value
-func (prog Prog) makeBitMask() uint {
+// makeBitMask returns a bit-mask of length bitCount
+func makeBitMask(bitCount int) uint {
 	var bm uint
-	for range prog.coinCount {
+	for range bitCount {
 		bm = (bm << 1) | 1
 	}
 
@@ -117,10 +117,10 @@ func (prog Prog) makeBitMask() uint {
 
 // makeShiftMask returns a bit-mask covering just the unshifted bits in the
 // value
-func (prog Prog) makeShiftMask(shift int) uint {
+func makeShiftMask(maxLen, shift, leadingPickupShift int) uint {
 	var bm uint
 
-	for i := range prog.coinCount {
+	for i := range maxLen {
 		var nextBit uint = 1
 
 		if i >= shift {
@@ -130,7 +130,7 @@ func (prog Prog) makeShiftMask(shift int) uint {
 		bm = (bm << 1) | nextBit
 	}
 
-	return bm >> uint(prog.leadingPickupShift) //nolint:gosec
+	return bm >> uint(leadingPickupShift) //nolint:gosec
 }
 
 // play runs the trials collecting the results in the players results fields
@@ -139,10 +139,10 @@ func (prog Prog) play(p1, p2 *Player) {
 
 	var match uint
 
-	mask := prog.makeBitMask()
+	mask := makeBitMask(prog.coinCount)
 
 	for range prog.trials {
-		toss := uint(rand.Intn(2)) //nolint:gosec,mnd
+		toss := uint(rand.IntN(2)) //nolint:gosec,mnd
 		match <<= 1
 		match |= toss
 		match &= mask
