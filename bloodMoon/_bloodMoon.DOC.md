@@ -1,11 +1,11 @@
 <!-- Created by mkdoc DO NOT EDIT. -->
 
-<!-- The contents of this file will be inserted into the generated -->
-<!-- Markdown documentation at the front by the mkdoc command. -->
-<!-- TODO: add any extra documentation -->
 # bloodMoon
 
-This \.\.\.\.
+This program will generate a randon=m birth stamp for the given year\. the birth
+stamp is a concept in the Blood Moon universe where each citizen of the moon is
+allocated a fourteen digit number recording the date and time when they were
+first registered\.
 
 
 
@@ -36,6 +36,3 @@ for the program from the command line.
 
 This offers version-querying parameters that allow the user to discover the
 program version.
-<!-- The contents of this file will be inserted into the generated -->
-<!-- Markdown documentation at the back by the mkdoc command. -->
-<!-- TODO: add any extra documentation -->
