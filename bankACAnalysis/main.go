@@ -456,21 +456,27 @@ func (s *Summaries) normalise(str string) string {
 
 // report will report the summaries
 func (s *Summaries) report(prog *Prog, cat string) {
+	const (
+		floatColWidth = 10
+		floatColPrec  = 2
+		pctColWidth   = 5
+		countColWidth = 5
+	)
 	summ, ok := s.summaries[cat]
 	if !ok {
 		fmt.Printf("*** category: %q is not recognised\n", cat)
 		return
 	}
 	floatCol := colfmt.Float{
-		W:    10,
-		Prec: 2,
+		W:    floatColWidth,
+		Prec: floatColPrec,
 		Zeroes: &colfmt.FloatZeroHandler{
 			Handle:  true,
 			Replace: "",
 		},
 	}
 	pctCol := colfmt.Percent{
-		W: 5,
+		W: pctColWidth,
 		Zeroes: &colfmt.FloatZeroHandler{
 			Handle:  true,
 			Replace: "",
@@ -480,7 +486,7 @@ func (s *Summaries) report(prog *Prog, cat string) {
 	rpt := col.StdRpt(
 		col.New(colfmt.String{W: tabWidth*s.maxDepth + s.maxNameWidth},
 			"Transaction Type"),
-		col.New(colfmt.Int{W: 5}, "Count"),
+		col.New(colfmt.Int{W: countColWidth}, "Count"),
 		col.New(&colfmt.Time{Format: "2006-Jan-02"},
 			"Date of", "First", "Transaction"),
 		col.New(&colfmt.Time{Format: "2006-Jan-02"},

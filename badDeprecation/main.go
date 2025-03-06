@@ -28,8 +28,10 @@ func (p *Prog) HandleRemainder(ps *param.PSet, _ *location.L) {
 			ps.AddErr("bad file", err)
 			continue
 		}
+
 		p.files = append(p.files, fileName)
 	}
+
 	if len(p.files) == 0 {
 		ps.AddErr("no files",
 			errors.New("at least one Go file must be supplied"))
@@ -56,34 +58,41 @@ func main() {
 	prog.files = ps.Remainder()
 
 	var lineNum int
+
 	lastLine := ""
+
 	var (
 		depRE       = regexp.MustCompile("^// Deprecated:")
 		blankLineRE = regexp.MustCompile("^// *$")
 	)
+
 	for _, filename := range prog.files {
-		var f *os.File
-		var err error
-		f, err = os.Open(filename)
+		f, err := os.Open(filename)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error opening: %q : %v\n", filename, err)
 			continue
 		}
+
 		lineNum = 0
+
 		scanner := bufio.NewScanner(f)
 		for scanner.Scan() {
 			lineNum++
 			line := scanner.Text()
+
 			if depRE.MatchString(line) {
 				if !blankLineRE.MatchString(lastLine) {
 					fmt.Println(filename, ":", lineNum, ":", line)
 				}
 			}
+
 			lastLine = line
 		}
+
 		if err := scanner.Err(); err != nil {
 			fmt.Fprintf(os.Stderr, "Error reading %q : %v\n", filename, err)
 		}
+
 		f.Close()
 	}
 }

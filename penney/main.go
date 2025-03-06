@@ -58,7 +58,8 @@ func (prog Prog) reportResults(p1, p2 *Player) {
 	cols := make([]*col.Col, 0, prog.choiceCount()*perChoiceCols)
 
 	for range len(p1.choices) {
-		cols = append(cols, col.New(colfmt.String{W: 3}, "chc"))
+		cols = append(cols,
+			col.New(colfmt.String{W: uint(prog.coinCount)}, "chc")) //nolint:gosec
 
 		if prog.showWinCount {
 			maxWinWidth := mathutil.Digits(prog.trials)
@@ -66,15 +67,15 @@ func (prog Prog) reportResults(p1, p2 *Player) {
 				col.New(colfmt.Int{W: uint(maxWinWidth)}, "wins")) //nolint:gosec
 		}
 
+		pctCol := col.New(&colfmt.Percent{W: 7, Prec: 2}, "%age")
 		if prog.showRunInfo {
-			cols = append(cols, col.New(&colfmt.Percent{W: 6, Prec: 2}, "%age"))
+			cols = append(cols, pctCol)
 			cols = append(cols, col.New(&colfmt.Int{W: 3}, "max", "run"))
 			cols = append(cols, col.New(
 				&colfmt.Float{W: 5, Prec: 1},
 				"avg", "run").SetSep(" | "))
 		} else {
-			cols = append(cols,
-				col.New(&colfmt.Percent{W: 6, Prec: 2}, "%age").SetSep(" | "))
+			cols = append(cols, pctCol.SetSep(" | "))
 		}
 	}
 
