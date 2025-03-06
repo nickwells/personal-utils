@@ -64,6 +64,8 @@ type M struct {
 }
 
 // New returns a new model with the default values set
+//
+//nolint:mnd
 func New() *M {
 	return &M{
 		rtnMeanPct:            7,
@@ -93,7 +95,9 @@ func (m M) initResults() []*AggResults {
 }
 
 // mergeResults ...
-func (m M) mergeResults(results []*AggResults, rc <-chan []*AggResults, dc chan<- bool) {
+func (m M) mergeResults(
+	results []*AggResults, rc <-chan []*AggResults, dc chan<- bool,
+) {
 	for subR := range rc {
 		for i, r := range subR {
 			val := results[i]
@@ -155,17 +159,22 @@ func (m *M) CalcValues() []*AggResults {
 	results := m.initResults()
 
 	poolSize := int64(runtime.NumCPU() - 1)
+
+	const poolChanScale = 2
+
 	if poolSize <= 0 {
 		poolSize = 1
 	}
+
 	if poolSize > m.trials {
 		poolSize = m.trials
 	}
+
 	m.modelMetrics.threadCount = poolSize
 
 	trialsPerRunner := int64(math.Ceil(float64(m.trials) / float64(poolSize)))
 
-	resultsChan := make(chan []*AggResults, poolSize*2)
+	resultsChan := make(chan []*AggResults, poolSize*poolChanScale)
 	resultsGathered := make(chan bool)
 	trialsComplete := make(chan bool)
 
