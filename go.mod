@@ -3,17 +3,17 @@ module github.com/nickwells/personal-utils
 go 1.24
 
 require (
-	github.com/nickwells/check.mod/v2 v2.1.15
-	github.com/nickwells/datagen.mod v0.0.6
-	github.com/nickwells/english.mod v1.1.6
-	github.com/nickwells/filecheck.mod v1.2.1
+	github.com/nickwells/check.mod/v2 v2.1.16
+	github.com/nickwells/datagen.mod v0.0.7
+	github.com/nickwells/english.mod v1.2.0
+	github.com/nickwells/filecheck.mod v1.2.2
 	github.com/nickwells/location.mod v1.2.28
 	github.com/nickwells/mathutil.mod/v2 v2.5.0
-	github.com/nickwells/param.mod/v6 v6.2.0
+	github.com/nickwells/param.mod/v6 v6.2.1
 	github.com/nickwells/testhelper.mod/v2 v2.3.1
 	github.com/nickwells/twrap.mod v1.5.5
-	github.com/nickwells/verbose.mod v1.1.5
-	github.com/nickwells/versionparams.mod v1.2.10
+	github.com/nickwells/verbose.mod v1.1.6
+	github.com/nickwells/versionparams.mod v1.2.11
 	github.com/nickwells/xdg.mod v1.0.10
 )
 
