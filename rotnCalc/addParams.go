@@ -35,7 +35,8 @@ func addParams(prog *Prog) param.PSetOptFunc {
 		)
 
 		ps.Add(paramNameRpm,
-			psetter.Float[float64]{Value: &prog.rpm,
+			psetter.Float[float64]{
+				Value: &prog.rpm,
 				Checks: []check.ValCk[float64]{
 					check.ValGT(0.0),
 				},
@@ -45,7 +46,8 @@ func addParams(prog *Prog) param.PSetOptFunc {
 		)
 
 		ps.Add(paramNameRadius,
-			psetter.Float[float64]{Value: &prog.radius,
+			psetter.Float[float64]{
+				Value: &prog.radius,
 				Checks: []check.ValCk[float64]{
 					check.ValGT(0.0),
 				},
@@ -68,7 +70,8 @@ func addParams(prog *Prog) param.PSetOptFunc {
 		})
 
 		ps.Add(paramNamePrecisionn,
-			psetter.Int[int]{Value: &prog.precision,
+			psetter.Int[int]{
+				Value: &prog.precision,
 				Checks: []check.ValCk[int]{
 					check.ValGE(0),
 				},
