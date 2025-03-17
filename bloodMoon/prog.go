@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 
+	"github.com/nickwells/tempus.mod/tempus"
 	"github.com/nickwells/verbose.mod/verbose"
 )
 
@@ -41,18 +42,12 @@ func (prog *Prog) ForceExitStatus(es int) {
 //
 //nolint:gosec
 func (prog *Prog) Run() {
-	const (
-		monthCount  = 12
-		hourCount   = 24
-		minSecCount = 60
-	)
-
-	days := [12]int64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
-	month := rand.Int64N(monthCount)
+	days := []int64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+	month := rand.Int64N(int64(len(days)))
 	dom := rand.Int64N(days[month])
-	h := rand.Int64N(hourCount)
-	m := rand.Int64N(minSecCount)
-	s := rand.Int64N(minSecCount)
+	h := rand.Int64N(tempus.HoursPerDay)
+	m := rand.Int64N(tempus.MinutesPerHour)
+	s := rand.Int64N(tempus.SecondsPerMinute)
 
 	fmt.Printf("%4d%02d%02d%02d%02d%02d\n", prog.year, month+1, dom+1, h, m, s)
 }
