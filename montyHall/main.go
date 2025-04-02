@@ -15,23 +15,24 @@ const (
 	dfltDoorCount  = 3
 )
 
-type Prog struct {
+// prog contains the parameters of the program
+type prog struct {
 	trials     int
 	doorCount  int
 	changeDoor bool
 	wins       int
 }
 
-// NewProg returns a new Prog instance with the default values set
-func NewProg() *Prog {
-	return &Prog{
+// newProg returns a new Prog instance with the default values set
+func newProg() *prog {
+	return &prog{
 		trials:    dfltTrialCount,
 		doorCount: dfltDoorCount,
 	}
 }
 
 func main() {
-	prog := NewProg()
+	prog := newProg()
 	ps := makeParamSet(prog)
 	ps.Parse()
 
@@ -49,7 +50,7 @@ func main() {
 // strategy would have won
 //
 //nolint:gosec
-func (prog *Prog) runTrial() {
+func (prog *prog) runTrial() {
 	prizeDoor := rand.IntN(prog.doorCount)
 	chosenDoor := rand.IntN(prog.doorCount)
 

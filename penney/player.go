@@ -4,28 +4,28 @@ import (
 	"fmt"
 
 	"github.com/nickwells/col.mod/v4/col"
-	"github.com/nickwells/mathutil.mod/v2/mathutil"
 )
 
-type Player struct {
+// player represents a player of the game
+type player struct {
 	ID string
 
 	choices []uint
-	r       []Results
+	r       []results
 }
 
-// NewPlayer returns a new Player
-func NewPlayer(id string, choices []uint) *Player {
+// newPlayer returns a new Player
+func newPlayer(id string, choices []uint) *player {
 	if id == "" {
 		panic("bad id - must not be empty")
 	}
 
-	p := &Player{
+	p := &player{
 		ID:      id,
 		choices: choices,
 	}
 
-	p.r = make([]Results, len(choices))
+	p.r = make([]results, len(choices))
 	for i, r := range p.r {
 		r.ID = id
 		p.r[i] = r
@@ -35,7 +35,7 @@ func NewPlayer(id string, choices []uint) *Player {
 }
 
 // reportResults reports each of the results
-func (p Player) reportResults(rpt *col.Report, prog Prog) {
+func (p player) reportResults(rpt *col.Report, prog Prog) {
 	vals := make([]any, 0, 1+prog.choiceCount()*3)
 
 	vals = append(vals, p.ID)
@@ -49,13 +49,7 @@ func (p Player) reportResults(rpt *col.Report, prog Prog) {
 			vals = append(vals, r.myWins)
 		}
 
-		percVal := float64(r.myWins) / float64(r.totalWins)
-
-		if prog.showRoughly {
-			percVal = mathutil.Roughly(percVal, 1)
-		}
-
-		vals = append(vals, percVal)
+		vals = append(vals, r.percVal(prog))
 
 		if prog.showRunInfo {
 			vals = append(vals,

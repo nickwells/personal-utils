@@ -65,7 +65,7 @@ type Edit struct {
 	replacement string
 }
 
-type Summaries struct {
+type summaries struct {
 	parentOf     map[string]string
 	summaries    map[string]*Summary
 	edits        []Edit
@@ -83,7 +83,7 @@ const (
 // openFileOrDie will try to open the given file and will return the open
 // file if successful and will print an error message and exit of not.
 func openFileOrDie(fileName, desc string) *os.File {
-	f, err := os.Open(fileName)
+	f, err := os.Open(fileName) //nolint:gosec
 	if err != nil {
 		fmt.Printf("Couldn't open the %s file: %s", desc, err)
 		os.Exit(1)
@@ -94,7 +94,7 @@ func openFileOrDie(fileName, desc string) *os.File {
 
 // populateParents constructs the parent tree of transactions from the
 // transaction map file
-func (s *Summaries) populateParents(prog *Prog) {
+func (s *summaries) populateParents(prog *prog) {
 	s.parentOf[catAll] = catAll
 
 	err := s.addParent(catAll, catUnknown)
@@ -145,7 +145,7 @@ func (s *Summaries) populateParents(prog *Prog) {
 
 // populateEdits constructs the slice of editing rules to be performed on
 // transaction descriptions
-func (s *Summaries) populateEdits(prog *Prog) {
+func (s *summaries) populateEdits(prog *prog) {
 	ef := openFileOrDie(prog.editFileName, "transaction edits")
 	defer ef.Close()
 
@@ -219,8 +219,8 @@ func (s *Summaries) populateEdits(prog *Prog) {
 }
 
 // initSummaries returns an initialised Summaries structure
-func (prog *Prog) initSummaries() *Summaries {
-	s := Summaries{
+func (prog *prog) initSummaries() *summaries {
+	s := summaries{
 		parentOf:  make(map[string]string),
 		summaries: make(map[string]*Summary),
 	}
@@ -238,7 +238,7 @@ func (prog *Prog) initSummaries() *Summaries {
 
 // addParent adds the parent/child relationship so that a given summary can
 // find its parent. It is an error if the parent does not already exist.
-func (s *Summaries) addParent(parent, child string) error {
+func (s *summaries) addParent(parent, child string) error {
 	if _, ok := s.parentOf[parent]; !ok {
 		return fmt.Errorf("%q (parent of %q) doesn't exist",
 			parent, child)
@@ -284,7 +284,7 @@ func (s *Summaries) addParent(parent, child string) error {
 
 // summarise will summarise the transaction working its way up to the top of
 // the tree of Summary records
-func (s *Summaries) summarise(xa Xactn) {
+func (s *summaries) summarise(xa Xactn) {
 	summ, ok := s.summaries[xa.desc]
 	if !ok {
 		fmt.Println("Couldn't find the summary record for :", xa)
@@ -317,8 +317,8 @@ func (s *Summary) add(xa Xactn) {
 	}
 }
 
-// Prog holds the parameters and current status of the program
-type Prog struct {
+// prog holds the parameters and current status of the program
+type prog struct {
 	// the name of a file containing  transactions
 	acFileName string
 	// all the transaction files, including any given after the terminal
@@ -345,8 +345,8 @@ type Prog struct {
 	showCats      []string
 }
 
-func NewProg() *Prog {
-	return &Prog{
+func newProg() *prog {
+	return &prog{
 		skipFirstLine: true,
 		style:         showLeafEntries,
 		showCats:      []string{catAll},
@@ -354,7 +354,7 @@ func NewProg() *Prog {
 }
 
 func main() {
-	prog := NewProg()
+	prog := newProg()
 	ps := makeParamSet(prog)
 
 	ps.Parse()
@@ -377,7 +377,7 @@ func main() {
 
 // getAccountData opens each file in turn and reads from it to populate the
 // summaries
-func (prog *Prog) getAccountData() *Summaries {
+func (prog *prog) getAccountData() *summaries {
 	prog.checkFiles()
 
 	s := prog.initSummaries()
@@ -394,7 +394,7 @@ func (prog *Prog) getAccountData() *Summaries {
 
 // checkFiles checks the slice of files and if a duplicate is found it will
 // report an error and exit
-func (prog *Prog) checkFiles() {
+func (prog *prog) checkFiles() {
 	if len(prog.files) == 0 {
 		fmt.Println("Some account files must be given")
 		os.Exit(1)
@@ -422,7 +422,7 @@ func (prog *Prog) checkFiles() {
 
 // populateSummaries fills in the summaries from the lines read from the
 // io.Reader
-func (s *Summaries) populateSummaries(prog *Prog, name string, r *csv.Reader) {
+func (s *summaries) populateSummaries(prog *prog, name string, r *csv.Reader) {
 	lineNum := 0
 
 	for {
@@ -456,22 +456,23 @@ func (s *Summaries) populateSummaries(prog *Prog, name string, r *csv.Reader) {
 // createNewMapEntries will create new parent/child map entries for the
 // transaction if it is not already known or if it is a cheque or cashpoint
 // withdrawal
-func (s *Summaries) createNewMapEntries(fileName string, lineNum int, xa Xactn) {
-	if xa.xaType == "CHQ" {
+func (s *summaries) createNewMapEntries(fileName string, lineNum int, xa Xactn) {
+	switch xa.xaType {
+	case "CHQ":
 		err := s.addParent(catCheque, xa.desc)
 		if err != nil {
 			fmt.Printf(
 				"%s:%d: Can't add the cheque to the %s: %s\n",
 				fileName, lineNum, xactnMapDesc, err)
 		}
-	} else if xa.xaType == "CPT" {
+	case "CPT":
 		err := s.addParent(catCash, xa.desc)
 		if err != nil {
 			fmt.Printf(
 				"%s:%d: Can't add the cashpoint withdrawal to the %s: %s\n",
 				fileName, lineNum, xactnMapDesc, err)
 		}
-	} else {
+	default:
 		if _, ok := s.parentOf[xa.desc]; ok {
 			return
 		}
@@ -488,7 +489,7 @@ func (s *Summaries) createNewMapEntries(fileName string, lineNum int, xa Xactn) 
 // normalise converts the string into a 'normal' form - this involves editing
 // it to replace multiple alternative spellings into a single variant. It
 // returns after all the edits have been applied
-func (s *Summaries) normalise(str string) string {
+func (s *summaries) normalise(str string) string {
 	for _, ed := range s.edits {
 		str = ed.searchRE.ReplaceAllLiteralString(str, ed.replacement)
 	}
@@ -497,7 +498,7 @@ func (s *Summaries) normalise(str string) string {
 }
 
 // report will report the summaries
-func (s *Summaries) report(prog *Prog, cat string) {
+func (s *summaries) report(prog *prog, cat string) {
 	const (
 		floatColWidth = 10
 		floatColPrec  = 2
@@ -556,7 +557,7 @@ func calcPct(amt, tot float64) float64 {
 }
 
 func (s *Summary) report(
-	prog *Prog,
+	prog *prog,
 	rpt *col.Report,
 	totDebit, totCredit float64,
 	indent int,
@@ -608,17 +609,17 @@ func parseNum(s, name string) (float64, error) {
 
 	n, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		return 0.0, fmt.Errorf("Couldn't parse the %s: %s", name, err)
+		return 0.0, fmt.Errorf("couldn't parse the %s: %s", name, err)
 	}
 
 	return n, nil
 }
 
 // mkXactn converts the slice of strings into an transaction record
-func (s *Summaries) mkXactn(lineNum int, parts []string) (Xactn, error) {
+func (s *summaries) mkXactn(lineNum int, parts []string) (Xactn, error) {
 	date, err := time.Parse("02/01/2006", parts[0])
 	if err != nil {
-		return Xactn{}, fmt.Errorf("Couldn't parse the date: %s", err)
+		return Xactn{}, fmt.Errorf("couldn't parse the date: %s", err)
 	}
 
 	da, err := parseNum(parts[5], "debit amount")

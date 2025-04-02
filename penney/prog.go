@@ -14,6 +14,7 @@ type Prog struct {
 	showWinCount       bool
 	showRunInfo        bool
 	showRoughly        bool
+	showExcess         bool
 }
 
 // NewProg returns a new Prog instance with the default values set
@@ -80,31 +81,6 @@ func (prog Prog) makeOtherChoices(choices []uint) []uint {
 	return otherChoices
 }
 
-// makeAllOtherChoices constructs the other (winning) choices given the choices
-// of the first player
-func (prog Prog) makeAllOtherChoices(choices []uint) [][]uint {
-	limit := uint(prog.choiceCount()) //nolint:gosec
-	allOtherChoices := make([][]uint, len(choices))
-
-	for i, c := range choices {
-		allOtherChoices[i] = make([]uint, len(choices)-1)
-
-		idx := 0
-
-		for j := range limit {
-			if j == c {
-				continue
-			}
-
-			allOtherChoices[i][idx] = j
-
-			idx++
-		}
-	}
-
-	return allOtherChoices
-}
-
 // makeBitMask returns a bit-mask of length bitCount
 func makeBitMask(bitCount int) uint {
 	var bm uint
@@ -134,7 +110,7 @@ func makeShiftMask(maxLen, shift, leadingPickupShift int) uint {
 }
 
 // play runs the trials collecting the results in the players results fields
-func (prog Prog) play(p1, p2 *Player) {
+func (prog Prog) play(p1, p2 *player) {
 	flips := make([]int, len(p1.choices))
 
 	var match uint
@@ -151,11 +127,12 @@ func (prog Prog) play(p1, p2 *Player) {
 			fc++
 
 			if fc >= int(prog.coinCount) {
-				if match == p1.choices[c] {
+				switch match {
+				case p1.choices[c]:
 					p1.r[c].notify(fc, p1.ID)
 					p2.r[c].notify(fc, p1.ID)
 					fc = 0
-				} else if match == p2.choices[c] {
+				case p2.choices[c]:
 					p1.r[c].notify(fc, p2.ID)
 					p2.r[c].notify(fc, p2.ID)
 					fc = 0

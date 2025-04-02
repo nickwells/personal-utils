@@ -21,20 +21,22 @@ var startTime = time.Date(
 	13, 0, 0, 0,
 	time.FixedZone("UTC", 0))
 
-// Prog holds the parameters and current status of the program
-type Prog struct {
+// prog holds the parameters and current status of the program
+type prog struct {
 	// the number of records to generate
 	count int64
 }
 
-func NewProg() *Prog {
-	return &Prog{
+// newProg creates and returns a new instance of a prog structure with the
+// count set to a default of 1
+func newProg() *prog {
+	return &prog{
 		count: 1,
 	}
 }
 
 func main() {
-	prog := NewProg()
+	prog := newProg()
 	ps := makeParamSet(prog)
 
 	ps.Parse()
@@ -125,7 +127,7 @@ func main() {
 }
 
 // addParams will add parameters to the passed ParamSet
-func addParams(prog *Prog) func(ps *param.PSet) error {
+func addParams(prog *prog) func(ps *param.PSet) error {
 	return func(ps *param.PSet) error {
 		ps.Add("count",
 			psetter.Int[int64]{

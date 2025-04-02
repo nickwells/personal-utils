@@ -9,7 +9,7 @@ import (
 )
 
 // addParams will add parameters to the passed ParamSet
-func addParams(prog *Prog) func(ps *param.PSet) error {
+func addParams(prog *prog) func(ps *param.PSet) error {
 	return func(ps *param.PSet) error {
 		ps.Add("ac-file",
 			psetter.Pathname{

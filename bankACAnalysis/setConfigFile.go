@@ -26,5 +26,6 @@ func SetConfigFile(ps *param.PSet) error {
 			"bankACAnalysis",
 			"common.cfg"),
 		filecheck.Optional)
+
 	return nil
 }

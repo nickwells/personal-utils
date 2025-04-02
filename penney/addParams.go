@@ -63,6 +63,13 @@ func addParams(prog *Prog) param.PSetOptFunc {
 			"show the run information where a run is a"+
 				" sequence of wins by the same player")
 
+		ps.Add("show-excess",
+			psetter.Bool{
+				Value: &prog.showExcess,
+			},
+			"show the difference between"+
+				" the average win percentages between the two players")
+
 		ps.Add("show-rough-results",
 			psetter.Bool{
 				Value: &prog.showRoughly,
@@ -74,7 +81,7 @@ func addParams(prog *Prog) param.PSetOptFunc {
 
 		ps.AddFinalCheck(func() error {
 			if prog.copyCount >= prog.coinCount {
-				return fmt.Errorf("The copy count (%d) must be less than"+
+				return fmt.Errorf("the copy count (%d) must be less than"+
 					" the number of coins (%d)",
 					prog.copyCount, prog.coinCount)
 			}

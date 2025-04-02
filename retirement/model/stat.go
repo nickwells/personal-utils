@@ -45,6 +45,8 @@ func NewStatOrPanic(size int) *Stat {
 
 type discardType int
 
+// These consts represent the end of a slice from which a value should be
+// dropped when a new value is added
 const (
 	DropFromStart discardType = iota
 	DropFromEnd
@@ -88,11 +90,12 @@ func insert(val float64, vals []float64, discard discardType) {
 		}
 	}
 
-	if discard == DropFromEnd {
+	switch discard {
+	case DropFromEnd:
 		if i+1 < len(vals) {
 			copy(vals[i+1:], vals[i:len(vals)-1])
 		}
-	} else if discard == DropFromStart {
+	case DropFromStart:
 		if i > 0 {
 			copy(vals[:i], vals[1:i+1])
 		}

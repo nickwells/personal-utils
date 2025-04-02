@@ -25,11 +25,11 @@ func addParams(prog *Prog) param.PSetOptFunc {
 
 		ps.AddFinalCheck(func() error {
 			if prog.year < minYear {
-				return fmt.Errorf("The earliest year is %d", minYear)
+				return fmt.Errorf("the earliest year is %d", minYear)
 			}
 
 			if prog.year > maxYear {
-				return fmt.Errorf("The latest year is %d", maxYear)
+				return fmt.Errorf("the latest year is %d", maxYear)
 			}
 
 			return nil

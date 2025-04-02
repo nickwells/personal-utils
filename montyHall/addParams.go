@@ -5,7 +5,7 @@ import (
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
-func addParams(prog *Prog) param.PSetOptFunc {
+func addParams(prog *prog) param.PSetOptFunc {
 	return func(ps *param.PSet) error {
 		ps.Add("trials",
 			psetter.Int[int]{Value: &prog.trials},

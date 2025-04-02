@@ -67,7 +67,7 @@ func main() {
 	)
 
 	for _, filename := range prog.files {
-		f, err := os.Open(filename)
+		f, err := os.Open(filename) //nolint:gosec
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error opening: %q : %v\n", filename, err)
 			continue
