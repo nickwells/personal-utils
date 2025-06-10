@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nickwells/col.mod/v4/col"
-	"github.com/nickwells/col.mod/v4/colfmt"
+	"github.com/nickwells/col.mod/v5/col"
+	"github.com/nickwells/col.mod/v5/colfmt"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"github.com/nickwells/twrap.mod/twrap"
 )
@@ -142,14 +142,14 @@ func (m M) reportModelParams() {
 		col.New(&colfmt.Percent{W: 6, Prec: 2}, "Growth", "Target", "Min"),
 		col.New(&colfmt.Float{W: 6}, "Income", "", "Target"),
 		col.New(&colfmt.Float{W: 6}, "Income", "", "Min"),
-		col.New(colfmt.Int{W: 6}, "Income", "drawings", "per yr"),
-		col.New(colfmt.Int{W: 6}, "Income", "years", "defered"),
-		col.New(colfmt.Int{W: 6}, "Crash", "interval"),
+		col.New(&colfmt.Int{W: 6}, "Income", "drawings", "per yr"),
+		col.New(&colfmt.Int{W: 6}, "Income", "years", "defered"),
+		col.New(&colfmt.Int{W: 6}, "Crash", "interval"),
 		col.New(&colfmt.Percent{W: 6, Prec: 2}, "Crash", "%age"),
-		col.New(colfmt.Int{W: 6}, "Model", "", "duration"),
-		col.New(colfmt.Int{W: 7}, "Model", "trials", "p/a"),
-		col.New(colfmt.Int{W: 6}, "Model", "years", "shown"),
-		col.New(colfmt.Int{W: 6}, "Model", "average", "set"),
+		col.New(&colfmt.Int{W: 6}, "Model", "", "duration"),
+		col.New(&colfmt.Int{W: 7}, "Model", "trials", "p/a"),
+		col.New(&colfmt.Int{W: 6}, "Model", "years", "shown"),
+		col.New(&colfmt.Int{W: 6}, "Model", "average", "set"),
 	)
 
 	fmt.Println()
@@ -176,8 +176,8 @@ func (m M) ReportModelMetrics() {
 		return
 	}
 
-	rpt := col.StdRpt(col.New(colfmt.Int{W: 6}, "threads"),
-		col.New(colfmt.Int{W: 8}, "time taken (µs)", "overall"),
+	rpt := col.StdRpt(col.New(&colfmt.Int{W: 6}, "threads"),
+		col.New(&colfmt.Int{W: 8}, "time taken (µs)", "overall"),
 	)
 
 	fmt.Println()

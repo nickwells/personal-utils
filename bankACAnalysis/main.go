@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nickwells/col.mod/v4/col"
-	"github.com/nickwells/col.mod/v4/colfmt"
+	"github.com/nickwells/col.mod/v5/col"
+	"github.com/nickwells/col.mod/v5/colfmt"
 )
 
 // Created: Sun May 12 16:39:24 2019
@@ -529,9 +529,9 @@ func (s *summaries) report(prog *prog, cat string) {
 	}
 
 	rpt := col.StdRpt(
-		col.New(colfmt.String{W: tabWidth*s.maxDepth + s.maxNameWidth},
+		col.New(&colfmt.String{W: tabWidth*s.maxDepth + s.maxNameWidth},
 			"Transaction Type"),
-		col.New(colfmt.Int{W: countColWidth}, "Count"),
+		col.New(&colfmt.Int{W: countColWidth}, "Count"),
 		col.New(&colfmt.Time{Format: "2006-Jan-02"},
 			"Date of", "First", "Transaction"),
 		col.New(&colfmt.Time{Format: "2006-Jan-02"},

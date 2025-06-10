@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/nickwells/col.mod/v4/col"
+	"github.com/nickwells/col.mod/v5/col"
 )
 
 // player represents a player of the game

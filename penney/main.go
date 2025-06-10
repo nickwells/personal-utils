@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nickwells/col.mod/v4/col"
-	"github.com/nickwells/col.mod/v4/colfmt"
+	"github.com/nickwells/col.mod/v5/col"
+	"github.com/nickwells/col.mod/v5/colfmt"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 )
 
@@ -33,7 +33,7 @@ func main() {
 
 		rpt := col.NewReportOrPanic(col.NewHeaderOrPanic(),
 			os.Stdout,
-			col.New(colfmt.String{}, "P1/P2").SetSep(": "),
+			col.New(&colfmt.String{}, "P1/P2").SetSep(": "),
 			cols...)
 
 		for i := range len(allPossibleChoices) {
@@ -96,7 +96,7 @@ func (prog Prog) reportResults(p1, p2 *player) {
 	for range len(p1.choices) {
 		cols = append(cols,
 			col.New(
-				colfmt.String{
+				&colfmt.String{
 					W: uint(prog.coinCount), //nolint:gosec
 				},
 				"chc"))
@@ -105,7 +105,7 @@ func (prog Prog) reportResults(p1, p2 *player) {
 			maxWinWidth := mathutil.Digits(prog.trials)
 			cols = append(cols,
 				col.New(
-					colfmt.Int{
+					&colfmt.Int{
 						W: uint(maxWinWidth), //nolint:gosec
 					},
 					"wins"))
@@ -127,7 +127,7 @@ func (prog Prog) reportResults(p1, p2 *player) {
 	hdr := col.NewHeaderOrPanic()
 	rpt := col.NewReportOrPanic(hdr,
 		os.Stdout,
-		col.New(colfmt.String{}, "player").SetSep(": "),
+		col.New(&colfmt.String{}, "player").SetSep(": "),
 		cols...)
 
 	p1.reportResults(rpt, prog)
