@@ -118,6 +118,7 @@ func (m M) mergeResults(
 			results[i] = val
 		}
 	}
+
 	dc <- true
 }
 
@@ -157,7 +158,9 @@ func (m *M) trialRunner(trials int64, rc chan<- []*AggResults, tc chan bool) {
 			s.adjustForInflation()
 		}
 	}
+
 	rc <- results
+
 	tc <- true
 }
 
