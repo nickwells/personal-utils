@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand/v2"
+	"strings"
 )
 
 // Prog holds program parameters and status
@@ -37,14 +38,15 @@ func NewProg() *Prog {
 // H's and T's
 func (prog Prog) uintToStr(v uint) string {
 	coins := [2]string{"H", "T"}
-	val := ""
+
+	var str strings.Builder
 
 	for i := prog.coinCount - 1; i >= 0; i-- {
 		cIdx := (v & (1 << i)) >> i
-		val += coins[cIdx]
+		str.WriteString(coins[cIdx])
 	}
 
-	return val
+	return str.String()
 }
 
 // choiceCount returns the number of choices corresponding to the coinCount
