@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/nickwells/col.mod/v5/col"
-	"github.com/nickwells/col.mod/v5/colfmt"
+	"github.com/nickwells/col.mod/v6/col"
+	"github.com/nickwells/col.mod/v6/colfmt"
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"github.com/nickwells/verbose.mod/verbose"

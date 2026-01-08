@@ -61,13 +61,13 @@ func makeTimeGen() datagen.TypedGenerator[time.Time] {
 	startTime := time.Date(2025, time.June, 1, 12, 0, 0, 0,
 		time.FixedZone("UTC", 0))
 
-	timeGen, err := datagen.NewGenWrapper[time.Time](datagen.NewTimeGen(
-		datagen.TimeGenSetLayout("Mon 02/01/2006"),
-		datagen.TimeGenSetInitialTime(startTime),
-		datagen.TimeGenSetIntervalF(
-			datagen.TimeGenConstIntervalF(time.Hour*24)),
-	),
-		datagen.GenWrapperSetIterator[time.Time](interIter),
+	timeGen, err := datagen.NewGenWrapper(
+		datagen.NewTimeGen(
+			datagen.TimeGenSetLayout("Mon 02/01/2006"),
+			datagen.TimeGenSetInitialTime(startTime),
+			datagen.TimeGenSetIntervalF(datagen.TimeGenConstIntervalF(time.Hour*24)),
+		),
+		datagen.GenWrapperSetIterator(interIter),
 	)
 	if err != nil {
 		fmt.Println("Cannot build the GenWrapper", err)
@@ -134,7 +134,7 @@ func main() {
 	timeGen := makeTimeGen()
 	isSalary := datagen.NewGen(
 		datagen.GenSetValue(false),
-		datagen.GenSetValSetter[bool](
+		datagen.GenSetValSetter(
 			salaryGenImpl{
 				p: makeSalaryCheck(timeGen),
 			}))

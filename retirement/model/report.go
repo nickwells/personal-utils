@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nickwells/col.mod/v5/col"
-	"github.com/nickwells/col.mod/v5/colfmt"
+	"github.com/nickwells/col.mod/v6/col"
+	"github.com/nickwells/col.mod/v6/colfmt"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"github.com/nickwells/twrap.mod/twrap"
 )

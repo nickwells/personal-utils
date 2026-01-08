@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nickwells/col.mod/v5/col"
-	"github.com/nickwells/col.mod/v5/colfmt"
+	"github.com/nickwells/col.mod/v6/col"
+	"github.com/nickwells/col.mod/v6/colfmt"
 )
 
 // Created: Sun May 12 16:39:24 2019
@@ -40,7 +40,7 @@ type Summary struct {
 	debitAmt   float64
 	creditAmt  float64
 	parent     *Summary
-	depth      uint
+	depth      int
 	components map[string]*Summary
 }
 
@@ -69,8 +69,8 @@ type summaries struct {
 	parentOf     map[string]string
 	summaries    map[string]*Summary
 	edits        []Edit
-	maxDepth     uint
-	maxNameWidth uint
+	maxDepth     int
+	maxNameWidth int
 }
 
 type reportStyle int
@@ -268,13 +268,9 @@ func (s *summaries) addParent(parent, child string) error {
 	}
 	s.summaries[child] = cSum
 
-	if cSum.depth > s.maxDepth {
-		s.maxDepth = cSum.depth
-	}
+	s.maxDepth = max(cSum.depth, s.maxDepth)
 
-	if uint(len(cSum.name)) > s.maxNameWidth {
-		s.maxNameWidth = uint(len(cSum.name))
-	}
+	s.maxNameWidth = max(len(cSum.name), s.maxNameWidth)
 
 	pSum.components[child] = cSum
 	s.parentOf[child] = parent

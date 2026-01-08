@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nickwells/col.mod/v5/col"
-	"github.com/nickwells/col.mod/v5/colfmt"
+	"github.com/nickwells/col.mod/v6/col"
+	"github.com/nickwells/col.mod/v6/colfmt"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 )
 
@@ -94,21 +94,11 @@ func (prog Prog) reportResults(p1, p2 *player) {
 	cols := make([]*col.Col, 0, prog.choiceCount()*perChoiceCols)
 
 	for range len(p1.choices) {
-		cols = append(cols,
-			col.New(
-				&colfmt.String{
-					W: uint(prog.coinCount), //nolint:gosec
-				},
-				"chc"))
+		cols = append(cols, col.New(&colfmt.String{W: prog.coinCount}, "chc"))
 
 		if prog.showWinCount {
 			maxWinWidth := mathutil.Digits(prog.trials)
-			cols = append(cols,
-				col.New(
-					&colfmt.Int{
-						W: uint(maxWinWidth), //nolint:gosec
-					},
-					"wins"))
+			cols = append(cols, col.New(&colfmt.Int{W: maxWinWidth}, "wins"))
 		}
 
 		pctCol := col.New(
