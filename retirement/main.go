@@ -3,8 +3,8 @@ package main
 // retirement
 
 import (
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/paramset"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/paramset"
 	"github.com/nickwells/personal-utils/retirement/model"
 	"github.com/nickwells/versionparams.mod/versionparams"
 )
@@ -12,7 +12,7 @@ import (
 // main
 func main() {
 	m := model.New()
-	ps := paramset.NewOrDie(
+	ps := paramset.New(
 		versionparams.AddParams,
 		model.AddParams(m),
 		SetConfigFile,

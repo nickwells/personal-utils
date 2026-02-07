@@ -12,8 +12,8 @@ import (
 
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/datagen.mod/datagen"
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 // Created: Sat Aug 20 12:19:22 2022

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 func addParams(prog *prog) param.PSetOptFunc {

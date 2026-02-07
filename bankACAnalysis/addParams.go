@@ -4,8 +4,8 @@ import (
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 // addParams will add parameters to the passed ParamSet
@@ -86,7 +86,7 @@ func addParams(prog *prog) func(ps *param.PSet) error {
 		ps.Add("summary", psetter.Nil{},
 			"show a summary report with no leaf transactions",
 			param.PostAction(
-				func(_ location.L, _ *param.ByName, _ []string) error {
+				func(_ location.L, _ *param.BaseParam, _ []string) error {
 					prog.style = summaryReport
 					return nil
 				}))
@@ -107,12 +107,6 @@ func addParams(prog *prog) func(ps *param.PSet) error {
 			psetter.Float[float64]{Value: &prog.minimalAmount},
 			"don't show summaries where the total transactions are"+
 				" less than this")
-
-		// allow trailing arguments
-		err := ps.SetNamedRemHandler(param.NullRemHandler{}, "bank-AC files")
-		if err != nil {
-			return err
-		}
 
 		return nil
 	}

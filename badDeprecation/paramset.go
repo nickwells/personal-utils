@@ -1,20 +1,20 @@
 package main
 
 import (
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/paramset"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/paramset"
 	"github.com/nickwells/versionparams.mod/versionparams"
 )
 
 // makeParamSet generates the param set ready for parsing
-func makeParamSet(prog *Prog) *param.PSet {
-	return paramset.NewOrPanic(
+func makeParamSet() *param.PSet {
+	return paramset.New(
 		versionparams.AddParams,
 
-		addParams(prog),
+		param.SetTrailingParamsName("Go-file"),
 
 		param.SetProgramDescription(
-			"This will read Go files given after '--' and will"+
+			"This will read Go files and will"+
 				" look for lines with invalid Deprecation comments."+
 				" It will report any such line it finds."),
 	)

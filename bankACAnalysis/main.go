@@ -355,7 +355,7 @@ func main() {
 
 	ps.Parse()
 
-	prog.files = ps.Remainder()
+	prog.files = ps.TrailingParams()
 	if prog.acFileName != "" {
 		prog.files = append(prog.files, prog.acFileName)
 	}

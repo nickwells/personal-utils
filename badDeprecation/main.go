@@ -2,40 +2,18 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
 
 	check "github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
-	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v6/param"
 )
 
 // Prog holds the parameters and current status of the program
 type Prog struct {
 	files    []string
 	provisos filecheck.Provisos
-}
-
-// HandleRemainder checks that each trailing argument is a non-empty Go file
-// and adds them to the program file list. It records an error if any
-// parameter is not a Go file.
-func (p *Prog) HandleRemainder(ps *param.PSet, _ *location.L) {
-	for _, fileName := range ps.Remainder() {
-		if err := p.provisos.StatusCheck(fileName); err != nil {
-			ps.AddErr("bad file", err)
-			continue
-		}
-
-		p.files = append(p.files, fileName)
-	}
-
-	if len(p.files) == 0 {
-		ps.AddErr("no files",
-			errors.New("at least one Go file must be supplied"))
-	}
 }
 
 // NewProg returns a new Prog value with any initial values set
@@ -51,11 +29,23 @@ func NewProg() *Prog {
 
 func main() {
 	prog := NewProg()
-	ps := makeParamSet(prog)
+	ps := makeParamSet()
 
 	ps.Parse()
 
-	prog.files = ps.Remainder()
+	for _, fileName := range ps.TrailingParams() {
+		if err := prog.provisos.StatusCheck(fileName); err != nil {
+			fmt.Fprint(os.Stderr, "bad file:", err)
+			continue
+		}
+
+		prog.files = append(prog.files, fileName)
+	}
+
+	if len(prog.files) == 0 {
+		fmt.Fprint(os.Stderr, "at least one Go file must be supplied")
+		os.Exit(1)
+	}
 
 	var lineNum int
 
