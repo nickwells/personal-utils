@@ -10,6 +10,6 @@ output is formatted with commas between thousands so you will need to edit the
 file to remove these\. Also the Fundsmith spreadsheet has the number of shares
 sold as a negative value \(it is reducing the total holding\) but for tax return
 purposes the value should be positive\. The Total Capital Gain figure is the one
-you need to provide
+you need to provide on your tax return\.
 
 

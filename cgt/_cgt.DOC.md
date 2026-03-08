@@ -5,7 +5,10 @@
 <!-- TODO: add any extra documentation -->
 # cgt
 
-This \.\.\.\.
+This program takes a file of trade data \(number of units and price\),
+representing sales, an aggregate purchase price and a tax rate and will report
+the value of each trade, the associated capital gain and the associated tax\. It
+will then report the totals of these amounts\.
 
 
 
