@@ -9,12 +9,12 @@ require (
 	github.com/nickwells/filecheck.mod v1.2.13
 	github.com/nickwells/location.mod v1.2.37
 	github.com/nickwells/mathutil.mod/v2 v2.5.11
-	github.com/nickwells/param.mod/v7 v7.2.1
+	github.com/nickwells/param.mod/v7 v7.2.2
 	github.com/nickwells/tempus.mod v1.2.11
 	github.com/nickwells/testhelper.mod/v2 v2.6.1
 	github.com/nickwells/twrap.mod v1.5.14
-	github.com/nickwells/verbose.mod v1.1.21
-	github.com/nickwells/versionparams.mod v1.2.25
+	github.com/nickwells/verbose.mod v1.1.22
+	github.com/nickwells/versionparams.mod v1.2.26
 	github.com/nickwells/xdg.mod v1.0.12
 )
 
