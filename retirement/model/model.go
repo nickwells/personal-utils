@@ -112,8 +112,8 @@ func (m M) mergeResults(
 			val.surplusAvailable += r.surplusAvailable
 			val.minimalIncome += r.minimalIncome
 			val.portfolioDown += r.portfolioDown
-			(val.portfolio).mergeVal(r.portfolio)
-			(val.income).mergeVal(r.income)
+			val.portfolio.mergeVal(r.portfolio)
+			val.income.mergeVal(r.income)
 
 			results[i] = val
 		}
@@ -304,7 +304,7 @@ func (s *state) setState(m *M) {
 	s.minIncome = m.minIncome
 
 	s.inflationAdjustment = 1
-	s.yearlyInflation = 1 + (mathutil.FromPercent(m.inflationPct))
+	s.yearlyInflation = 1 + mathutil.FromPercent(m.inflationPct)
 }
 
 // calcCurrentIncome sets the income to be taken in the forthcoming year. It
