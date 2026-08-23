@@ -11,10 +11,11 @@ import (
 )
 
 const (
-	paramNameAcc        = "acc"
-	paramNameRpm        = "rpm"
-	paramNameRadius     = "radius"
-	paramNamePrecisionn = "precision"
+	paramNameAcc       = "acc"
+	paramNameRpm       = "rpm"
+	paramNameRadius    = "radius"
+	paramNamePrecision = "precision"
+	paramNameCircSpeed = "show-circumferential-speed"
 
 	numParamsReqd = 2
 )
@@ -57,6 +58,25 @@ func addParams(prog *Prog) param.PSetOptFunc {
 			param.AltNames("r"),
 		)
 
+		ps.Add(paramNameCircSpeed,
+			psetter.Bool{
+				Value: &prog.showCircSpeed,
+			},
+			"show the circumferential speed",
+			param.AltNames("show-speed"),
+		)
+
+		ps.Add(paramNamePrecision,
+			psetter.Int[int]{
+				Value: &prog.precision,
+				Checks: []check.ValCk[int]{
+					check.ValGE(0),
+				},
+			},
+			"the precision with which to print the result",
+			param.AltNames("p", "prec"),
+		)
+
 		ps.AddFinalCheck(func() error {
 			if (prog.accSet + prog.rpmSet + prog.radiusSet) != numParamsReqd {
 				return errors.New("Two and only two of " +
@@ -69,16 +89,13 @@ func addParams(prog *Prog) param.PSetOptFunc {
 			return nil
 		})
 
-		ps.Add(paramNamePrecisionn,
-			psetter.Int[int]{
-				Value: &prog.precision,
-				Checks: []check.ValCk[int]{
-					check.ValGE(0),
-				},
-			},
-			"the precision with which to print the result",
-			param.AltNames("p", "prec"),
-		)
+		ps.AddFinalCheck(func() error {
+			if prog.rpmSet == 1 {
+				prog.setOmega()
+			}
+
+			return nil
+		})
 
 		// ps.AddGroup("group-name", "description")
 		// ps.AddExample("example", "description")

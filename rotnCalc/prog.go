@@ -14,16 +14,20 @@ type Prog struct {
 	exitStatus int
 	stack      *verbose.Stack
 
-	acc    float64
+	acc    float64 // acceleration
 	accSet int
 
-	rpm    float64
+	rpm    float64 // revolutions per minute
 	rpmSet int
+	omega  float64 // radians per second
+	omega2 float64 // omega squared
 
 	radius    float64
 	radiusSet int
 
 	precision int
+
+	showCircSpeed bool
 }
 
 // NewProg returns a new Prog instance with the default values set
@@ -55,30 +59,32 @@ func (prog *Prog) Run() {
 	const (
 		twoPi   = math.Pi * 2
 		rps2rpm = 60 / twoPi
-		rpm2rps = twoPi / 60
 	)
 
-	if prog.rpmSet == 1 && prog.accSet == 1 {
-		omega := prog.rpm * rpm2rps
-		fmt.Printf("Radius: %.*f m\n",
-			prog.precision, prog.acc/(omega*omega))
-
-		return
-	}
-
-	if prog.rpmSet == 1 && prog.radiusSet == 1 {
-		omega := prog.rpm * rpm2rps
-		fmt.Printf("Acceleration: %.*f m/s^2\n",
-			prog.precision, omega*omega*prog.radius)
-
-		return
-	}
-
-	if prog.radiusSet == 1 && prog.accSet == 1 {
-		rpm := math.Sqrt(prog.acc/prog.radius) * rps2rpm
+	switch {
+	case prog.rpmSet == 1 && prog.accSet == 1:
+		prog.radius = prog.acc / prog.omega2
+		fmt.Printf("Radius: %.*f m\n", prog.precision, prog.radius)
+	case prog.rpmSet == 1 && prog.radiusSet == 1:
+		prog.acc = prog.omega2 * prog.radius
+		fmt.Printf("Acceleration: %.*f m/s^2\n", prog.precision, prog.acc)
+	case prog.radiusSet == 1 && prog.accSet == 1:
+		prog.rpm = math.Sqrt(prog.acc/prog.radius) * rps2rpm
+		prog.setOmega()
 		fmt.Printf("RPM: %.*f revolutions per minute\n",
-			prog.precision, rpm)
-
-		return
+			prog.precision, prog.rpm)
 	}
+
+	if prog.showCircSpeed {
+		fmt.Printf("circumferential speed: %.*f m/s\n",
+			prog.precision, prog.omega*prog.radius)
+	}
+}
+
+// setOmega will set the omega and omega2 values for prog
+func (prog *Prog) setOmega() {
+	const rpm2RadPerSec = math.Pi * 2 / 60
+
+	prog.omega = prog.rpm * rpm2RadPerSec
+	prog.omega2 = prog.omega * prog.omega
 }
