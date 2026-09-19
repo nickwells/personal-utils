@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/nickwells/tempus.mod/tempus"
+	"github.com/nickwells/tempus.mod/v2/tempus"
 	"github.com/nickwells/verbose.mod/verbose"
 	"github.com/nickwells/xdg.mod/xdg"
 )
@@ -20,6 +20,12 @@ const (
 
 	cacheDirPerms = 0o750
 )
+
+// asOf records the Month and Year for which to report the exchange rate
+type asOf struct {
+	m time.Month
+	y int
+}
 
 // prog holds program parameters and status
 type prog struct {
@@ -34,6 +40,9 @@ type prog struct {
 
 	from CurrencyCode
 	to   CurrencyCode
+
+	asOf      asOf
+	asOfGiven bool
 
 	amount float64
 	// program data
