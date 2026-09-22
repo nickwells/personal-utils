@@ -8,13 +8,13 @@ require (
 	github.com/nickwells/english.mod v1.2.12
 	github.com/nickwells/filecheck.mod v1.2.16
 	github.com/nickwells/groupsetter.mod v1.1.0
-	github.com/nickwells/locale.mod v1.0.0
+	github.com/nickwells/locale.mod v1.1.0
 	github.com/nickwells/location.mod v1.2.40
 	github.com/nickwells/mathutil.mod/v2 v2.5.14
 	github.com/nickwells/param.mod/v7 v7.3.1
 	github.com/nickwells/tempus.mod/v2 v2.0.0
 	github.com/nickwells/testhelper.mod/v2 v2.6.4
-	github.com/nickwells/timesetter.mod v1.0.1
+	github.com/nickwells/timesetter.mod v1.0.2
 	github.com/nickwells/twrap.mod v1.5.16
 	github.com/nickwells/verbose.mod v1.1.27
 	github.com/nickwells/versionparams.mod v1.2.31
