@@ -112,7 +112,6 @@ func addParams(prog *prog) param.PSetOptFunc {
 		ps.Add(paramNameAsOf,
 			makeAsOfSetter(prog),
 			"the month and year for which to give the exchange rates",
-			param.PostAction(paction.SetVal(&prog.asOfGiven, true)),
 		)
 
 		ps.AddFinalCheck(func() error {

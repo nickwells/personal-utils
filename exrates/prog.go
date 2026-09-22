@@ -27,6 +27,26 @@ type asOf struct {
 	y int
 }
 
+// initAsOf constructs the default asOf structure. It uses the current month
+// and year unless the date is after the second last Thursday of the month in
+// which case it advances the date by one month (possibly advancing the year
+// if the date is in December).
+func initAsOf() asOf {
+	target := time.Now()
+
+	domPenultimateThu, _ := tempus.NthWeekdayOfMonthYear(
+		-2, time.Thursday,
+		target.Month(), target.Year())
+	if domPenultimateThu < target.Day() {
+		target = tempus.AddMonth(1, target)
+	}
+
+	return asOf{
+		y: target.Year(),
+		m: target.Month(),
+	}
+}
+
 // prog holds program parameters and status
 type prog struct {
 	exitStatus int
@@ -41,8 +61,7 @@ type prog struct {
 	from CurrencyCode
 	to   CurrencyCode
 
-	asOf      asOf
-	asOfGiven bool
+	asOf asOf
 
 	amount float64
 	// program data
@@ -56,11 +75,12 @@ func newProg() *prog {
 	return &prog{
 		stack: &verbose.Stack{},
 
-		cacheFile: makeCcyFileName(),
-		cacheDir:  mkCacheDirPath(),
+		cacheDir: mkCacheDirPath(),
 
 		from: baseCcy,
 		to:   baseCcy,
+
+		asOf: initAsOf(),
 
 		amount: 1,
 
@@ -101,14 +121,15 @@ func (prog *prog) run() {
 		}
 	}()
 
-	cacheFileName := prog.cacheFile
+	cacheFilePath := prog.cacheFile
 	if !prog.useGivenFile {
-		cacheFileName = filepath.Join(prog.cacheDir, prog.cacheFile)
+		cacheFilePath = filepath.Join(prog.cacheDir, prog.makeCcyFileName())
 	}
 
-	err = prog.populateRates(cacheFileName)
+	err = prog.populateRates(cacheFilePath)
 	if err != nil {
 		if prog.useGivenFile {
+			prog.exitStatus = 1
 			return
 		}
 
@@ -120,7 +141,7 @@ func (prog *prog) run() {
 			return
 		}
 
-		err = prog.populateRates(cacheFileName)
+		err = prog.populateRates(cacheFilePath)
 		if err != nil {
 			return
 		}
@@ -213,7 +234,7 @@ func (prog *prog) fillRatesCacheFile() error {
 		baseURL = siteURL + "/uk/api/exchange_rates/files"
 	)
 
-	fileName := makeCcyFileName()
+	fileName := prog.makeCcyFileName()
 	url := baseURL + "/" + fileName
 
 	resp, err := http.Get(url) //nolint:gosec
@@ -270,22 +291,10 @@ func (prog *prog) fillRatesCacheFile() error {
 	return csvWriter.WriteAll(allRecords)
 }
 
-// makeCcyFileName constructs the name of the latest currency file
-func makeCcyFileName() string {
-	const (
-		fileNameBase   = "monthly_csv_"
-		fileNameSuffix = ".csv"
-	)
-
-	target := time.Now()
-
-	domPenultimateThu, _ := tempus.NthWeekdayOfMonthYear(
-		-2, time.Thursday,
-		target.Month(), target.Year())
-	if domPenultimateThu < target.Day() {
-		target = tempus.AddMonth(1, target)
-	}
-
-	return fmt.Sprintf("%s%d-%d%s",
-		fileNameBase, target.Year(), target.Month(), fileNameSuffix)
+// makeCcyFileName constructs the name of the latest currency file from the
+// program asOf field which is initialised to take the current date possibly
+// with some adjustment for the second-last-Thursday-of-the-month rule; see
+// the initAsOf func for details.
+func (prog *prog) makeCcyFileName() string {
+	return fmt.Sprintf("monthly_csv_%d-%d.csv", prog.asOf.y, prog.asOf.m)
 }
